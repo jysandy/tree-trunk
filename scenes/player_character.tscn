@@ -1,0 +1,246 @@
+[gd_scene load_steps=52 format=3 uid="uid://nlyux760ykgh"]
+
+[ext_resource type="Script" path="res://scenes/PlayerCharacter.cs" id="1_qnhp3"]
+[ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
+[ext_resource type="Texture2D" uid="uid://c0qiq8tqewg8d" path="res://assets/world-and-dungeon/player/idle/idle-down-02.png" id="2_w7kge"]
+[ext_resource type="Texture2D" uid="uid://b1vw558ihjfwp" path="res://assets/world-and-dungeon/player/idle/idle-down-03.png" id="3_hi5r2"]
+[ext_resource type="Texture2D" uid="uid://jatxead64qdx" path="res://assets/world-and-dungeon/player/idle/idle-down-04.png" id="4_ig2lv"]
+[ext_resource type="Texture2D" uid="uid://ch1p64l3c6nrb" path="res://assets/world-and-dungeon/player/idle/idle-down-05.png" id="5_cyfah"]
+[ext_resource type="Texture2D" uid="uid://wr4milty35fo" path="res://assets/world-and-dungeon/player/idle/idle-down-06.png" id="6_6anxd"]
+[ext_resource type="Texture2D" uid="uid://c5mmera684jf7" path="res://assets/world-and-dungeon/player/idle/idle-down-07.png" id="7_ixtfu"]
+[ext_resource type="Texture2D" uid="uid://p7liysmxm7dy" path="res://assets/world-and-dungeon/player/idle/idle-down-08.png" id="8_kiwe4"]
+[ext_resource type="Texture2D" uid="uid://bk6cbbxsiduox" path="res://assets/world-and-dungeon/player/idle/idle-down-09.png" id="9_63e0h"]
+[ext_resource type="Texture2D" uid="uid://cv6vllgc8pcr3" path="res://assets/world-and-dungeon/player/idle/idle-side-01.png" id="10_1t4sk"]
+[ext_resource type="Texture2D" uid="uid://c34vq82dxauyo" path="res://assets/world-and-dungeon/player/idle/idle-side-02.png" id="11_80hag"]
+[ext_resource type="Texture2D" uid="uid://brftj0m5awsg0" path="res://assets/world-and-dungeon/player/idle/idle-side-03.png" id="12_ujpmh"]
+[ext_resource type="Texture2D" uid="uid://ovkiun8r4hsc" path="res://assets/world-and-dungeon/player/idle/idle-side-04.png" id="13_2ncax"]
+[ext_resource type="Texture2D" uid="uid://2p5m45nt2axk" path="res://assets/world-and-dungeon/player/idle/idle-side-05.png" id="14_wssbq"]
+[ext_resource type="Texture2D" uid="uid://igdl32u8whea" path="res://assets/world-and-dungeon/player/idle/idle-side-06.png" id="15_1jom3"]
+[ext_resource type="Texture2D" uid="uid://cewbekf72fpfu" path="res://assets/world-and-dungeon/player/idle/idle-side-07.png" id="16_47ifl"]
+[ext_resource type="Texture2D" uid="uid://bnpjprhh4n1om" path="res://assets/world-and-dungeon/player/idle/idle-side-08.png" id="17_lsoda"]
+[ext_resource type="Texture2D" uid="uid://bmb37hbj8pfil" path="res://assets/world-and-dungeon/player/idle/idle-side-09.png" id="18_bn108"]
+[ext_resource type="Texture2D" uid="uid://c4qrfqr3o1dc8" path="res://assets/world-and-dungeon/player/idle/idle-side-10.png" id="19_glxuo"]
+[ext_resource type="Texture2D" uid="uid://nlbhgkp5s7o3" path="res://assets/world-and-dungeon/player/idle/idle-up-01.png" id="20_7km1p"]
+[ext_resource type="Texture2D" uid="uid://b4a3jt7g5d7ed" path="res://assets/world-and-dungeon/player/idle/idle-up-02.png" id="21_xh2ws"]
+[ext_resource type="Texture2D" uid="uid://bl3eajp4iwh08" path="res://assets/world-and-dungeon/player/idle/idle-up-03.png" id="22_ma1mc"]
+[ext_resource type="Texture2D" uid="uid://cvcd2v10s7tel" path="res://assets/world-and-dungeon/player/idle/idle-up-04.png" id="23_qyqvw"]
+[ext_resource type="Texture2D" uid="uid://dm6aemyn3pfjp" path="res://assets/world-and-dungeon/player/idle/idle-up-05.png" id="24_wyvey"]
+[ext_resource type="Texture2D" uid="uid://c4ehkfu5n2nmy" path="res://assets/world-and-dungeon/player/idle/idle-up-06.png" id="25_84vtj"]
+[ext_resource type="Texture2D" uid="uid://r3e4qt5yh8ei" path="res://assets/world-and-dungeon/player/idle/idle-up-07.png" id="26_155a8"]
+[ext_resource type="Texture2D" uid="uid://d2vs8dumnkvcj" path="res://assets/world-and-dungeon/player/idle/idle-up-08.png" id="27_q0h72"]
+[ext_resource type="Texture2D" uid="uid://bt6slmh335814" path="res://assets/world-and-dungeon/player/idle/idle-up-09.png" id="28_62xa0"]
+[ext_resource type="Texture2D" uid="uid://b3wh0iwa0n314" path="res://assets/world-and-dungeon/player/idle/idle-up-10.png" id="29_puxto"]
+[ext_resource type="Texture2D" uid="uid://crmiwt2ihbaqm" path="res://assets/world-and-dungeon/player/idle/shadow.png" id="30_rcduc"]
+[ext_resource type="Texture2D" uid="uid://de1nnv2r3bsfl" path="res://assets/world-and-dungeon/player/run/run-down-01.png" id="31_1pyud"]
+[ext_resource type="Texture2D" uid="uid://v1hwpv4krq7c" path="res://assets/world-and-dungeon/player/run/run-side-01.png" id="31_uddbe"]
+[ext_resource type="Texture2D" uid="uid://dujsua5wjk23k" path="res://assets/world-and-dungeon/player/run/run-side-02.png" id="32_3lbcm"]
+[ext_resource type="Texture2D" uid="uid://cwy1vnn3owprh" path="res://assets/world-and-dungeon/player/run/run-down-02.png" id="32_vqrvh"]
+[ext_resource type="Texture2D" uid="uid://dv1rne17kr7ti" path="res://assets/world-and-dungeon/player/run/run-side-03.png" id="33_fr8qt"]
+[ext_resource type="Texture2D" uid="uid://csd82k78odjnq" path="res://assets/world-and-dungeon/player/run/run-down-03.png" id="33_x01jj"]
+[ext_resource type="Texture2D" uid="uid://b2qge4ev1ss1" path="res://assets/world-and-dungeon/player/run/run-side-04.png" id="34_28vv4"]
+[ext_resource type="Texture2D" uid="uid://brk8o2pj32mnl" path="res://assets/world-and-dungeon/player/run/run-down-04.png" id="34_skpud"]
+[ext_resource type="Texture2D" uid="uid://cpjxtwfrp3lf4" path="res://assets/world-and-dungeon/player/run/run-down-05.png" id="35_0vlph"]
+[ext_resource type="Texture2D" uid="uid://bxx1yhjr4ifat" path="res://assets/world-and-dungeon/player/run/run-side-05.png" id="35_4t3f1"]
+[ext_resource type="Texture2D" uid="uid://bso60n12iqest" path="res://assets/world-and-dungeon/player/run/run-side-06.png" id="36_l5mjd"]
+[ext_resource type="Texture2D" uid="uid://c3i6cqofd8a24" path="res://assets/world-and-dungeon/player/run/run-side-07.png" id="37_e66wy"]
+[ext_resource type="Texture2D" uid="uid://bw87fx7mwpbyj" path="res://assets/world-and-dungeon/player/run/run-side-08.png" id="38_awjq3"]
+[ext_resource type="Texture2D" uid="uid://d4nbglphwj8i0" path="res://assets/world-and-dungeon/player/run/run-up-01.png" id="39_i7rs7"]
+[ext_resource type="Texture2D" uid="uid://sibi4owxf05y" path="res://assets/world-and-dungeon/player/run/run-up-02.png" id="40_38fm0"]
+[ext_resource type="Texture2D" uid="uid://dgvw87ncs4aod" path="res://assets/world-and-dungeon/player/run/run-up-03.png" id="41_1y7y8"]
+[ext_resource type="Texture2D" uid="uid://bjnsycqyb2ofi" path="res://assets/world-and-dungeon/player/run/run-up-04.png" id="42_qumq4"]
+[ext_resource type="Texture2D" uid="uid://5sgcwxd8sp7s" path="res://assets/world-and-dungeon/player/run/run-up-05.png" id="43_ungfb"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v1wuj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xduoe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w7kge")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_hi5r2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ig2lv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_cyfah")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_6anxd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ixtfu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_kiwe4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_63e0h")
+}],
+"loop": true,
+"name": &"idle-down",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_1t4sk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_80hag")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_ujpmh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_2ncax")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_wssbq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_1jom3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_47ifl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_lsoda")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_bn108")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_glxuo")
+}],
+"loop": true,
+"name": &"idle-right",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_7km1p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_xh2ws")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_ma1mc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_qyqvw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_wyvey")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_84vtj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_155a8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_q0h72")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_62xa0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_puxto")
+}],
+"loop": true,
+"name": &"idle-up",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_1pyud")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_vqrvh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_x01jj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_skpud")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_0vlph")
+}],
+"loop": true,
+"name": &"run-down",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_uddbe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_3lbcm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_fr8qt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_28vv4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_4t3f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_l5mjd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_e66wy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_awjq3")
+}],
+"loop": true,
+"name": &"run-right",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("39_i7rs7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_38fm0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_1y7y8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_qumq4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_ungfb")
+}],
+"loop": true,
+"name": &"run-up",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0bj2e"]
+radius = 9.0
+height = 20.0
+
+[node name="PlayerCharacter" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_qnhp3")
+metadata/_edit_group_ = true
+
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -11)
+sprite_frames = SubResource("SpriteFrames_v1wuj")
+animation = &"idle-down"
+
+[node name="IdleShadow" type="Sprite2D" parent="."]
+position = Vector2(0, -11)
+texture = ExtResource("30_rcduc")
+
+[node name="PhysicsHitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_0bj2e")

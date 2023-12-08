@@ -1,0 +1,85 @@
+[gd_scene load_steps=16 format=3 uid="uid://byovaei4ckxmp"]
+
+[ext_resource type="Script" path="res://scenes/Critter.cs" id="1_ddtl1"]
+[ext_resource type="Texture2D" uid="uid://4a552ol44vgr" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-01.png" id="1_xtinv"]
+[ext_resource type="Texture2D" uid="uid://djaf4xhuwk4mg" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-02.png" id="2_xx7po"]
+[ext_resource type="Texture2D" uid="uid://ckcixws5p7fb2" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-03.png" id="3_1ngl7"]
+[ext_resource type="Texture2D" uid="uid://cegibdo14vqc" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-04.png" id="4_cfn60"]
+[ext_resource type="Texture2D" uid="uid://dd3p2diakx4h6" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-05.png" id="5_ejj2x"]
+[ext_resource type="Texture2D" uid="uid://dl8pvuk2fih6t" path="res://assets/world-and-dungeon/enemies/Enemy1/run-01.png" id="6_a7bme"]
+[ext_resource type="Texture2D" uid="uid://cqp3wp0atahuv" path="res://assets/world-and-dungeon/enemies/Enemy1/run-02.png" id="7_ipm6l"]
+[ext_resource type="Texture2D" uid="uid://diloxcil4xpdi" path="res://assets/world-and-dungeon/enemies/Enemy1/run-03.png" id="8_y5c4p"]
+[ext_resource type="Texture2D" uid="uid://b5gkq8sga120b" path="res://assets/world-and-dungeon/enemies/Enemy1/run-04.png" id="9_l5oab"]
+[ext_resource type="Texture2D" uid="uid://dsylqil4fxhi6" path="res://assets/world-and-dungeon/enemies/Enemy1/run-05.png" id="10_xl6g3"]
+[ext_resource type="Texture2D" uid="uid://dsyowguh575fe" path="res://assets/world-and-dungeon/enemies/Enemy1/run-06.png" id="11_anpte"]
+[ext_resource type="Texture2D" uid="uid://dwdtjn4brqpom" path="res://assets/world-and-dungeon/enemies/Enemy1/shadow.png" id="12_uk5bn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yteou"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xtinv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_xx7po")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_1ngl7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_cfn60")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ejj2x")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_a7bme")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ipm6l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_y5c4p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_l5oab")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_xl6g3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_anpte")
+}],
+"loop": true,
+"name": &"run-right",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_444wa"]
+radius = 8.0
+height = 16.0
+
+[node name="Critter" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_ddtl1")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, -12)
+sprite_frames = SubResource("SpriteFrames_yteou")
+animation = &"idle"
+frame_progress = 0.211612
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_444wa")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+position = Vector2(2, -12)
+texture = ExtResource("12_uk5bn")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
