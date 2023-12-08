@@ -48,65 +48,75 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private bool IsMoving
 	{
-		get 
+		get
 		{
 			return Velocity.Length() > 0;
 		}
 	}
 
-	private void PlayAnimation()
+	private void PlayIdleAnimation()
+	{
+		if (Velocity.Y > 0)
+		{
+			PlayerSprite.FlipH = false;
+			PlayerSprite.Play("run-down");
+		}
+		else if (Velocity.Y < 0)
+		{
+			PlayerSprite.FlipH = false;
+			PlayerSprite.Play("run-up");
+		}
+		else if (Velocity.X > 0)
+		{
+			PlayerSprite.FlipH = false;
+			PlayerSprite.Play("run-right");
+		}
+		else if (Velocity.X < 0)
+		{
+			PlayerSprite.FlipH = true;
+			PlayerSprite.Play("run-right");
+		}
+
+	}
+
+	private void PlayRunningAnimation()
 	{
 		var playerToMouse = GetGlobalMousePosition() - Position;
 
+		switch (ToCardinalDirection(playerToMouse))
+		{
+			case CardinalDirection.Left:
+				PlayerSprite.FlipH = true;
+				PlayerSprite.Play("idle-right");
+				break;
+
+			case CardinalDirection.Right:
+				PlayerSprite.FlipH = false;
+				PlayerSprite.Play("idle-right");
+				break;
+
+			case CardinalDirection.Up:
+				PlayerSprite.FlipH = false;
+				PlayerSprite.Play("idle-up");
+				break;
+
+			case CardinalDirection.Down:
+				PlayerSprite.FlipH = false;
+				PlayerSprite.Play("idle-down");
+				break;
+		}
+	}
+
+	private void PlayAnimation()
+	{
 		if (IsMoving)
 		{
-			if (Velocity.Y > 0)
-			{
-				PlayerSprite.FlipH = false;
-				PlayerSprite.Play("run-down");
-			}
-			else if (Velocity.Y < 0)
-			{
-				PlayerSprite.FlipH = false;
-				PlayerSprite.Play("run-up");
-			}
-			else if (Velocity.X > 0)
-			{
-				PlayerSprite.FlipH = false;
-				PlayerSprite.Play("run-right");
-			}
-			else if (Velocity.X < 0)
-			{
-				PlayerSprite.FlipH = true;
-				PlayerSprite.Play("run-right");
-			}
+			PlayIdleAnimation();
 		}
 		else
 		{
-			switch(ToCardinalDirection(playerToMouse))
-			{
-				case CardinalDirection.Left:
-					PlayerSprite.FlipH = true;
-					PlayerSprite.Play("idle-right");
-					break;
-
-				case CardinalDirection.Right:
-					PlayerSprite.FlipH = false;
-					PlayerSprite.Play("idle-right");
-					break;
-
-				case CardinalDirection.Up:
-					PlayerSprite.FlipH = false;
-					PlayerSprite.Play("idle-up");
-					break;
-
-				case CardinalDirection.Down:
-					PlayerSprite.FlipH = false;
-					PlayerSprite.Play("idle-down");
-					break;
-			}
+			PlayRunningAnimation();
 		}
-
 	}
 
 	public override void _PhysicsProcess(double delta)
