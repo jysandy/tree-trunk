@@ -24,12 +24,10 @@ public partial class PlayerCharacter : CharacterBody2D
 	}
 
 	private AnimatedSprite2D PlayerSprite
-	{
-		get
-		{
-			return GetNode<AnimatedSprite2D>("PlayerSprite");
-		}
-	}
+	{ get { return GetNode<AnimatedSprite2D>("PlayerSprite"); } }
+
+	private AnimatedSprite2D MeleeAttackSprite
+	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
 	private CardinalDirection ToCardinalDirection(Vector2 v)
 	{
@@ -138,13 +136,8 @@ public partial class PlayerCharacter : CharacterBody2D
 	[Signal]
 	public delegate void MeleeAttackEventHandler(MeleeAttackHurtbox hurtbox);
 
-	private void TriggerMeleeAttack(CardinalDirection direction)
+	private MeleeAttackHurtbox CreateMeleeHurtbox(CardinalDirection direction)
 	{
-		if (_isMeleeAttacking)
-		{
-			return;
-		}
-
 		float rotation = 0;
 		Vector2 position = Vector2.Zero;
 
@@ -175,13 +168,77 @@ public partial class PlayerCharacter : CharacterBody2D
 		hurtbox.GlobalRotation = rotation;
 		hurtbox.GlobalPosition = position;
 
+		return hurtbox;
+	}
+
+	private Marker2D MeleeAttackSpawnMarker(CardinalDirection direction)
+	{
+		switch (direction)
+		{
+			case CardinalDirection.Left:
+				return GetNode<Marker2D>("LeftMeleeAttackSpawn");
+
+			case CardinalDirection.Right:
+				return GetNode<Marker2D>("RightMeleeAttackSpawn");
+
+			case CardinalDirection.Up:
+				return GetNode<Marker2D>("UpMeleeAttackSpawn");
+
+			default:
+				return GetNode<Marker2D>("DownMeleeAttackSpawn");
+		}
+	}
+
+	private float RotationDegreesFromRight(CardinalDirection direction)
+	{
+		switch (direction)
+		{
+			case CardinalDirection.Left:
+				return 180;
+
+			case CardinalDirection.Right:
+				return 0;
+
+			case CardinalDirection.Up:
+				return 270;
+
+			default:
+				return 90;
+		}
+	}
+	private void PlayMeleeAttackAnimation(CardinalDirection direction)
+	{
+		MeleeAttackSprite.Position = MeleeAttackSpawnMarker(direction).Position;
+		MeleeAttackSprite.RotationDegrees = RotationDegreesFromRight(direction);
+
+		MeleeAttackSprite.Visible = true;
+		MeleeAttackSprite.Play("attack-right");
+	}
+
+	private void StopMeleeAttackAnimation()
+	{
+		MeleeAttackSprite.Visible = false;
+		MeleeAttackSprite.Stop();
+	}
+
+	private void TriggerMeleeAttack(CardinalDirection direction)
+	{
+		if (_isMeleeAttacking)
+		{
+			return;
+		}
+
+		var hurtbox = CreateMeleeHurtbox(direction);
+
 		_isMeleeAttacking = true;
 		EmitSignal(SignalName.MeleeAttack, hurtbox);
+		PlayMeleeAttackAnimation(direction);
 
 		RunLater(0.2, () =>
 		{
 			_isMeleeAttacking = false;
 			hurtbox.QueueFree();
+			StopMeleeAttackAnimation();
 		}
 		);
 	}
