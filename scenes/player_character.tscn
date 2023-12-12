@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://nlyux760ykgh"]
+[gd_scene load_steps=53 format=3 uid="uid://nlyux760ykgh"]
 
 [ext_resource type="Script" path="res://scenes/PlayerCharacter.cs" id="1_qnhp3"]
 [ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
@@ -49,6 +49,7 @@
 [ext_resource type="Texture2D" uid="uid://dgvw87ncs4aod" path="res://assets/world-and-dungeon/player/run/run-up-03.png" id="41_1y7y8"]
 [ext_resource type="Texture2D" uid="uid://bjnsycqyb2ofi" path="res://assets/world-and-dungeon/player/run/run-up-04.png" id="42_qumq4"]
 [ext_resource type="Texture2D" uid="uid://5sgcwxd8sp7s" path="res://assets/world-and-dungeon/player/run/run-up-05.png" id="43_ungfb"]
+[ext_resource type="PackedScene" uid="uid://da0tg32bbncly" path="res://scenes/MeleeAttackHurtbox.tscn" id="50_bhm3k"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v1wuj"]
 animations = [{
@@ -231,6 +232,7 @@ height = 20.0
 [node name="PlayerCharacter" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_qnhp3")
+MeleeHurtbox = ExtResource("50_bhm3k")
 metadata/_edit_group_ = true
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
@@ -244,3 +246,15 @@ texture = ExtResource("30_rcduc")
 
 [node name="PhysicsHitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_0bj2e")
+
+[node name="DownMeleeAttackSpawn" type="Marker2D" parent="."]
+position = Vector2(2.08165e-12, 12)
+
+[node name="LeftMeleeAttackSpawn" type="Marker2D" parent="."]
+position = Vector2(-18, -9)
+
+[node name="UpMeleeAttackSpawn" type="Marker2D" parent="."]
+position = Vector2(2.08165e-12, -39)
+
+[node name="RightMeleeAttackSpawn" type="Marker2D" parent="."]
+position = Vector2(18, -9)

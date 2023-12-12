@@ -1,13 +1,20 @@
-[gd_scene load_steps=16 format=3 uid="uid://byovaei4ckxmp"]
+[gd_scene load_steps=24 format=3 uid="uid://byovaei4ckxmp"]
 
 [ext_resource type="Script" path="res://scenes/Critter.cs" id="1_ddtl1"]
 [ext_resource type="Texture2D" uid="uid://4a552ol44vgr" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-01.png" id="1_xtinv"]
+[ext_resource type="Texture2D" uid="uid://dqvfahj7idyo7" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-01.png" id="2_fhjxs"]
 [ext_resource type="Texture2D" uid="uid://djaf4xhuwk4mg" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-02.png" id="2_xx7po"]
 [ext_resource type="Texture2D" uid="uid://ckcixws5p7fb2" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-03.png" id="3_1ngl7"]
+[ext_resource type="Texture2D" uid="uid://c1wtp0uwqh3ml" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-02.png" id="3_wo86k"]
+[ext_resource type="Texture2D" uid="uid://sovuo8iuoyjv" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-03.png" id="4_c6ffh"]
 [ext_resource type="Texture2D" uid="uid://cegibdo14vqc" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-04.png" id="4_cfn60"]
 [ext_resource type="Texture2D" uid="uid://dd3p2diakx4h6" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-05.png" id="5_ejj2x"]
+[ext_resource type="Texture2D" uid="uid://c33nge0m8in6t" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-04.png" id="5_urale"]
 [ext_resource type="Texture2D" uid="uid://dl8pvuk2fih6t" path="res://assets/world-and-dungeon/enemies/Enemy1/run-01.png" id="6_a7bme"]
+[ext_resource type="Texture2D" uid="uid://ehwcq5luf85w" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-05.png" id="6_ov2tp"]
+[ext_resource type="Texture2D" uid="uid://c7e127omej3bw" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-06.png" id="7_0walg"]
 [ext_resource type="Texture2D" uid="uid://cqp3wp0atahuv" path="res://assets/world-and-dungeon/enemies/Enemy1/run-02.png" id="7_ipm6l"]
+[ext_resource type="Texture2D" uid="uid://cjodxqstmx4s1" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-07.png" id="8_b3q38"]
 [ext_resource type="Texture2D" uid="uid://diloxcil4xpdi" path="res://assets/world-and-dungeon/enemies/Enemy1/run-03.png" id="8_y5c4p"]
 [ext_resource type="Texture2D" uid="uid://b5gkq8sga120b" path="res://assets/world-and-dungeon/enemies/Enemy1/run-04.png" id="9_l5oab"]
 [ext_resource type="Texture2D" uid="uid://dsylqil4fxhi6" path="res://assets/world-and-dungeon/enemies/Enemy1/run-05.png" id="10_xl6g3"]
@@ -16,6 +23,32 @@
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_yteou"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_fhjxs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_wo86k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_c6ffh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_urale")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ov2tp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_0walg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_b3q38")
+}],
+"loop": false,
+"name": &"dead-right",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_xtinv")
@@ -64,6 +97,9 @@ animations = [{
 radius = 8.0
 height = 16.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vvxoj"]
+height = 34.0
+
 [node name="Critter" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_ddtl1")
@@ -72,8 +108,7 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(2, -12)
 sprite_frames = SubResource("SpriteFrames_yteou")
-animation = &"idle"
-frame_progress = 0.211612
+animation = &"dead-right"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_444wa")
@@ -83,3 +118,13 @@ position = Vector2(2, -12)
 texture = ExtResource("12_uk5bn")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="CritterHitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CritterHitbox"]
+position = Vector2(0, -11)
+shape = SubResource("CapsuleShape2D_vvxoj")
+
+[connection signal="area_entered" from="CritterHitbox" to="." method="OnCritterHitboxAreaEntered"]

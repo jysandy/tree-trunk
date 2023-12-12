@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 public partial class Main : Node
 {
@@ -36,4 +37,12 @@ public partial class Main : Node
 			Critter.MovementTarget = Player.GlobalTransform.Origin;
 		}
 	}
+
+	private void OnPlayerCharacterMeleeAttack(MeleeAttackHurtbox hurtbox)
+	{
+		AddChild(hurtbox);
+	}
 }
+
+
+

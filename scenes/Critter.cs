@@ -6,6 +6,13 @@ public partial class Critter : CharacterBody2D
 	[Export]
 	public float Speed = 200.0f;
 
+	[Export]
+	public float MaxHealth = 200.0f;
+
+	float _currentHealth = 0.0f;
+
+	public bool IsDead { get { return _currentHealth <= 0; } }
+
 	private NavigationAgent2D NavigationAgent
 	{
 		get { return GetNode<NavigationAgent2D>("NavigationAgent2D"); }
@@ -32,12 +39,13 @@ public partial class Critter : CharacterBody2D
 	{
 		base._Ready();
 
+		_currentHealth = MaxHealth;
 		PlayAnimation();
 	}
 
 	private bool IsMoving
 	{
-		get 
+		get
 		{
 			return Velocity.Length() > 0;
 		}
@@ -45,6 +53,11 @@ public partial class Critter : CharacterBody2D
 
 	private void PlayAnimation()
 	{
+		if (IsDead)
+		{
+			return;
+		}
+
 		if (IsMoving)
 		{
 			if (Velocity.X > 0)
@@ -58,7 +71,7 @@ public partial class Critter : CharacterBody2D
 				CritterSprite.Play("run-right");
 			}
 		}
-		else 
+		else
 		{
 			CritterSprite.Play("idle");
 		}
@@ -67,6 +80,11 @@ public partial class Critter : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
+
+		if (IsDead)
+		{
+			return;
+		}
 
 		if (!NavigationAgent.IsTargetReachable())
 		{
@@ -88,5 +106,20 @@ public partial class Critter : CharacterBody2D
 		Velocity = currentAgentPosition.DirectionTo(nextPathPosition) * Speed;
 		MoveAndSlide();
 		PlayAnimation();
+	}
+
+	private void OnCritterHitboxAreaEntered(Area2D area)
+	{
+		if (IsDead)
+		{
+			return;
+		}
+
+		_currentHealth = Mathf.Clamp(_currentHealth - 50, 0, MaxHealth);
+
+		if (IsDead)
+		{
+			CritterSprite.Play("dead-right");
+		}
 	}
 }
