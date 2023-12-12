@@ -138,35 +138,9 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private MeleeAttackHurtbox CreateMeleeHurtbox(CardinalDirection direction)
 	{
-		float rotation = 0;
-		Vector2 position = Vector2.Zero;
-
-		switch (direction)
-		{
-			case CardinalDirection.Left:
-				rotation = Mathf.DegToRad(90);
-				position = GetNode<Marker2D>("LeftMeleeAttackSpawn").GlobalPosition;
-				break;
-
-			case CardinalDirection.Right:
-				rotation = Mathf.DegToRad(270);
-				position = GetNode<Marker2D>("RightMeleeAttackSpawn").GlobalPosition;
-				break;
-
-			case CardinalDirection.Up:
-				rotation = Mathf.DegToRad(180);
-				position = GetNode<Marker2D>("UpMeleeAttackSpawn").GlobalPosition;
-				break;
-
-			case CardinalDirection.Down:
-				rotation = Mathf.DegToRad(0);
-				position = GetNode<Marker2D>("DownMeleeAttackSpawn").GlobalPosition;
-				break;
-		}
-
 		var hurtbox = MeleeHurtbox.Instantiate<MeleeAttackHurtbox>();
-		hurtbox.GlobalRotation = rotation;
-		hurtbox.GlobalPosition = position;
+		hurtbox.GlobalRotationDegrees = RotationDegreesFromRight(direction);
+		hurtbox.GlobalPosition = MeleeAttackSpawnMarker(direction).GlobalPosition;
 
 		return hurtbox;
 	}

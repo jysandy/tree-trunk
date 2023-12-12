@@ -10,4 +10,5 @@ script = ExtResource("1_vwi1i")
 metadata/_edit_group_ = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+rotation = -1.5708
 polygon = PackedVector2Array(-20, -10, -8, 2, 8, 2, 20, -10, 16, 6, 8, 14, -8, 14, -16, 6)
