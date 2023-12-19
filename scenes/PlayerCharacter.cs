@@ -15,7 +15,14 @@ public partial class PlayerCharacter : CharacterBody2D
 	[Export]
 	public PackedScene MeleeHurtbox;
 
+	[Export]
+	public PackedScene BulletScene;
+
 	private bool _isMeleeAttacking = false;
+	private bool _canShoot = true;
+
+	[Signal]
+	public delegate void SpawnInMainEventHandler(Node2D node);
 
 	private void SetVelocityFromInput()
 	{
@@ -28,6 +35,8 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private AnimatedSprite2D MeleeAttackSprite
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
+
+	private Marker2D RangedAttackSpawn { get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
 
 	private CardinalDirection ToCardinalDirection(Vector2 v)
 	{
@@ -126,16 +135,6 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	public override void _PhysicsProcess(double delta)
-	{
-		SetVelocityFromInput();
-		PlayAnimation();
-		MoveAndSlide();
-	}
-
-	[Signal]
-	public delegate void MeleeAttackEventHandler(MeleeAttackHurtbox hurtbox);
-
 	private MeleeAttackHurtbox CreateMeleeHurtbox(CardinalDirection direction)
 	{
 		var hurtbox = MeleeHurtbox.Instantiate<MeleeAttackHurtbox>();
@@ -195,6 +194,11 @@ public partial class PlayerCharacter : CharacterBody2D
 		MeleeAttackSprite.Stop();
 	}
 
+	private void AddChildToMain(Node2D node)
+	{
+		EmitSignal(SignalName.SpawnInMain, node);
+	}
+
 	private void TriggerMeleeAttack(CardinalDirection direction)
 	{
 		if (_isMeleeAttacking)
@@ -205,7 +209,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		var hurtbox = CreateMeleeHurtbox(direction);
 
 		_isMeleeAttacking = true;
-		EmitSignal(SignalName.MeleeAttack, hurtbox);
+		AddChildToMain(hurtbox);
 		PlayMeleeAttackAnimation(direction);
 
 		RunLater(0.2, () =>
@@ -223,6 +227,26 @@ public partial class PlayerCharacter : CharacterBody2D
 		f();
 	}
 
+	private void TriggerRangedAttack()
+	{
+		if (!_canShoot)
+		{
+			return;
+		}
+		_canShoot = false;
+
+		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
+		var velocity = bulletDirection * 600.0f;
+		var bullet = BulletScene.Instantiate<Bullet>();
+
+		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
+		bullet.Velocity = velocity;
+		bullet.GlobalRotation = velocity.Angle() + Mathf.Tau / 2;
+
+		AddChildToMain(bullet);
+		RunLater(0.2, () => _canShoot = true);
+	}
+
 	public override void _Input(InputEvent @event)
 	{
 		base._Input(@event);
@@ -230,6 +254,18 @@ public partial class PlayerCharacter : CharacterBody2D
 		if (Input.IsActionJustPressed("melee_attack"))
 		{
 			TriggerMeleeAttack(DirectionOfPlayer());
+		}
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		SetVelocityFromInput();
+		PlayAnimation();
+		MoveAndSlide();
+
+		if (Input.IsActionPressed("ranged_attack"))
+		{
+			TriggerRangedAttack();
 		}
 	}
 }

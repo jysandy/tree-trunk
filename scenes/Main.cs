@@ -38,9 +38,9 @@ public partial class Main : Node
 		}
 	}
 
-	private void OnPlayerCharacterMeleeAttack(MeleeAttackHurtbox hurtbox)
+	private void OnAddChildToMain(Node2D node)
 	{
-		AddChild(hurtbox);
+		AddChild(node);
 	}
 }
 

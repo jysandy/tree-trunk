@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://gd4c8ayuwlq4"]
+
+[ext_resource type="Script" path="res://scenes/BulletHurtbox.cs" id="1_cg5en"]
+[ext_resource type="Script" path="res://scenes/Bullet.cs" id="1_sx8vj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20cqj"]
+size = Vector2(20, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tdii5"]
+size = Vector2(20, 4)
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 0
+motion_mode = 1
+platform_on_leave = 2
+script = ExtResource("1_sx8vj")
+Damage = 20.0
+
+[node name="PhysicsHitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_20cqj")
+
+[node name="BulletHurtbox" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_cg5en")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BulletHurtbox"]
+shape = SubResource("RectangleShape2D_tdii5")
+
+[connection signal="area_entered" from="BulletHurtbox" to="." method="OnBulletHurtboxAreaEntered"]

@@ -47,6 +47,6 @@ zoom = Vector2(3, 3)
 
 [node name="Critter" parent="." instance=ExtResource("3_ifydr")]
 position = Vector2(1233, 120)
-Speed = 100.0
+Speed = 50.0
 
-[connection signal="MeleeAttack" from="PlayerCharacter" to="." method="OnPlayerCharacterMeleeAttack"]
+[connection signal="SpawnInMain" from="PlayerCharacter" to="." method="OnAddChildToMain"]

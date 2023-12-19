@@ -1,9 +1,10 @@
-[gd_scene load_steps=63 format=3 uid="uid://nlyux760ykgh"]
+[gd_scene load_steps=64 format=3 uid="uid://nlyux760ykgh"]
 
 [ext_resource type="Script" path="res://scenes/PlayerCharacter.cs" id="1_qnhp3"]
 [ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
 [ext_resource type="Texture2D" uid="uid://c0qiq8tqewg8d" path="res://assets/world-and-dungeon/player/idle/idle-down-02.png" id="2_w7kge"]
 [ext_resource type="Texture2D" uid="uid://b1vw558ihjfwp" path="res://assets/world-and-dungeon/player/idle/idle-down-03.png" id="3_hi5r2"]
+[ext_resource type="PackedScene" uid="uid://gd4c8ayuwlq4" path="res://scenes/Bullet.tscn" id="3_vxxpm"]
 [ext_resource type="Texture2D" uid="uid://jatxead64qdx" path="res://assets/world-and-dungeon/player/idle/idle-down-04.png" id="4_ig2lv"]
 [ext_resource type="Texture2D" uid="uid://ch1p64l3c6nrb" path="res://assets/world-and-dungeon/player/idle/idle-down-05.png" id="5_cyfah"]
 [ext_resource type="Texture2D" uid="uid://wr4milty35fo" path="res://assets/world-and-dungeon/player/idle/idle-down-06.png" id="6_6anxd"]
@@ -274,9 +275,12 @@ animations = [{
 }]
 
 [node name="PlayerCharacter" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 33
 motion_mode = 1
 script = ExtResource("1_qnhp3")
 MeleeHurtbox = ExtResource("50_bhm3k")
+BulletScene = ExtResource("3_vxxpm")
 metadata/_edit_group_ = true
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
@@ -313,3 +317,6 @@ sprite_frames = SubResource("SpriteFrames_mbu0a")
 animation = &"attack-right"
 frame = 8
 frame_progress = 1.0
+
+[node name="RangedAttackSpawn" type="Marker2D" parent="."]
+position = Vector2(0, -19)

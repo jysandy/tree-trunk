@@ -101,6 +101,8 @@ height = 16.0
 height = 34.0
 
 [node name="Critter" type="CharacterBody2D"]
+collision_layer = 32
+collision_mask = 17
 motion_mode = 1
 script = ExtResource("1_ddtl1")
 metadata/_edit_group_ = true
@@ -110,7 +112,7 @@ position = Vector2(2, -12)
 sprite_frames = SubResource("SpriteFrames_yteou")
 animation = &"dead-right"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="PhysicsHitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_444wa")
 
 [node name="Shadow" type="Sprite2D" parent="."]
@@ -119,12 +121,12 @@ texture = ExtResource("12_uk5bn")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
-[node name="CritterHitbox" type="Area2D" parent="."]
+[node name="HealthHitbox" type="Area2D" parent="."]
 collision_layer = 2
 collision_mask = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CritterHitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthHitbox"]
 position = Vector2(0, -11)
 shape = SubResource("CapsuleShape2D_vvxoj")
 
-[connection signal="area_entered" from="CritterHitbox" to="." method="OnCritterHitboxAreaEntered"]
+[connection signal="area_entered" from="HealthHitbox" to="." method="OnCritterHitboxAreaEntered"]

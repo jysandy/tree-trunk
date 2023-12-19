@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Godot;
+using TreeTrunk;
 
 public partial class Critter : CharacterBody2D
 {
@@ -14,14 +15,16 @@ public partial class Critter : CharacterBody2D
 	public bool IsDead { get { return _currentHealth <= 0; } }
 
 	private NavigationAgent2D NavigationAgent
-	{
-		get { return GetNode<NavigationAgent2D>("NavigationAgent2D"); }
-	}
+	{ get { return GetNode<NavigationAgent2D>("NavigationAgent2D"); } }
 
 	private AnimatedSprite2D CritterSprite
-	{
-		get { return GetNode<AnimatedSprite2D>("AnimatedSprite2D"); }
-	}
+	{ get { return GetNode<AnimatedSprite2D>("AnimatedSprite2D"); } }
+
+	private Area2D HealthHitbox
+	{ get { return GetNode<Area2D>("HealthHitbox"); } }
+
+	private CollisionShape2D PhysicsHitbox
+	{ get { return GetNode<CollisionShape2D>("PhysicsHitbox"); } }
 
 	public Vector2 MovementTarget
 	{
@@ -77,6 +80,20 @@ public partial class Critter : CharacterBody2D
 		}
 	}
 
+	private void SetVelocityFromNavigation()
+	{
+		if (!NavigationAgent.IsTargetReachable() || NavigationAgent.IsNavigationFinished())
+		{
+			Velocity = Vector2.Zero;
+			return;
+		}
+
+		Vector2 currentAgentPosition = GlobalPosition;
+		Vector2 nextPathPosition = NavigationAgent.GetNextPathPosition();
+
+		Velocity = currentAgentPosition.DirectionTo(nextPathPosition) * Speed;
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
@@ -86,26 +103,14 @@ public partial class Critter : CharacterBody2D
 			return;
 		}
 
-		if (!NavigationAgent.IsTargetReachable())
-		{
-			Debug.WriteLine("Target not reachable!");
-			PlayAnimation();
-			return;
-		}
-
-		if (NavigationAgent.IsNavigationFinished())
-		{
-			Velocity = Vector2.Zero;
-			PlayAnimation();
-			return;
-		}
-
-		Vector2 currentAgentPosition = GlobalPosition; // try replacing with GlobalPosition
-		Vector2 nextPathPosition = NavigationAgent.GetNextPathPosition();
-
-		Velocity = currentAgentPosition.DirectionTo(nextPathPosition) * Speed;
+		SetVelocityFromNavigation();
 		MoveAndSlide();
 		PlayAnimation();
+	}
+
+	private void Die()
+	{
+		CritterSprite.Play("dead-right");
 	}
 
 	private void OnCritterHitboxAreaEntered(Area2D area)
@@ -115,11 +120,13 @@ public partial class Critter : CharacterBody2D
 			return;
 		}
 
-		_currentHealth = Mathf.Clamp(_currentHealth - 50, 0, MaxHealth);
+		var attack = (IAttack)area;
+
+		_currentHealth = Mathf.Clamp(_currentHealth - attack.Damage, 0, MaxHealth);
 
 		if (IsDead)
 		{
-			CritterSprite.Play("dead-right");
+			Die();
 		}
 	}
 }
