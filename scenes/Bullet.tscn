@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://gd4c8ayuwlq4"]
+[gd_scene load_steps=6 format=3 uid="uid://gd4c8ayuwlq4"]
 
 [ext_resource type="Script" path="res://scenes/BulletHurtbox.cs" id="1_cg5en"]
 [ext_resource type="Script" path="res://scenes/Bullet.cs" id="1_sx8vj"]
+[ext_resource type="Texture2D" uid="uid://dwdtjn4brqpom" path="res://assets/world-and-dungeon/enemies/Enemy1/shadow.png" id="3_ho7iq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_20cqj"]
 size = Vector2(20, 4)
@@ -15,6 +16,7 @@ motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_sx8vj")
 Damage = 20.0
+metadata/_edit_group_ = true
 
 [node name="PhysicsHitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_20cqj")
@@ -26,5 +28,11 @@ script = ExtResource("1_cg5en")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BulletHurtbox"]
 shape = SubResource("RectangleShape2D_tdii5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(2, -14)
+texture = ExtResource("3_ho7iq")
 
 [connection signal="area_entered" from="BulletHurtbox" to="." method="OnBulletHurtboxAreaEntered"]

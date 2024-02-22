@@ -46,11 +46,11 @@ navigation_polygon = SubResource("NavigationPolygon_gsdcx")
 [node name="Critter" parent="Main" instance=ExtResource("3_ifydr")]
 z_index = 1
 y_sort_enabled = true
-position = Vector2(1233, 120)
+position = Vector2(1235, -145)
 Speed = 50.0
 
 [node name="PlayerCharacter" parent="Main" instance=ExtResource("2_8hyis")]
-position = Vector2(1241, 234)
+position = Vector2(1152, 98)
 scale = Vector2(0.8, 0.8)
 
 [node name="Camera2D" type="Camera2D" parent="Main/PlayerCharacter"]
