@@ -111,6 +111,8 @@ public partial class Critter : CharacterBody2D
 	private void Die()
 	{
 		CritterSprite.Play("dead-right");
+		GetNode<CollisionShape2D>("PhysicsHitbox").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+		GetNode<CollisionShape2D>("HealthHitbox/CollisionShape2D").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 	}
 
 	private void OnCritterHitboxAreaEntered(Area2D area)

@@ -17,10 +17,13 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Arr
 outlines = Array[PackedVector2Array]([PackedVector2Array(1063, 253, 1116, 223, 1134, 209, 1134, 256, 1118, 255, 1064, 297)])
 source_geometry_group_name = &"navigation_polygon_source_group"
 
-[node name="Main" type="Node"]
+[node name="Root" type="Node"]
+
+[node name="Main" type="Node2D" parent="."]
+y_sort_enabled = true
 script = ExtResource("1_6rebb")
 
-[node name="TileMap" type="TileMap" parent="."]
+[node name="TileMap" type="TileMap" parent="Main"]
 tile_set = ExtResource("1_um1rc")
 format = 2
 layer_0/name = "ground"
@@ -32,21 +35,25 @@ layer_2/tile_data = PackedInt32Array(524329, 327680, 11, 458793, 262144, 12, 393
 layer_3/name = "stairs"
 layer_3/tile_data = PackedInt32Array(458786, 458752, 10, 524322, 458752, 11)
 
-[node name="WorldNavigation" type="NavigationRegion2D" parent="TileMap"]
+[node name="WorldNavigation" type="NavigationRegion2D" parent="Main/TileMap"]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_kbd6h")
 
-[node name="StairsNavigation" type="NavigationRegion2D" parent="TileMap"]
+[node name="StairsNavigation" type="NavigationRegion2D" parent="Main/TileMap"]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_gsdcx")
 
-[node name="PlayerCharacter" parent="." instance=ExtResource("2_8hyis")]
-position = Vector2(1241, 234)
-scale = Vector2(0.8, 0.8)
-
-[node name="Camera2D" type="Camera2D" parent="PlayerCharacter"]
-zoom = Vector2(3, 3)
-
-[node name="Critter" parent="." instance=ExtResource("3_ifydr")]
+[node name="Critter" parent="Main" instance=ExtResource("3_ifydr")]
+z_index = 1
+y_sort_enabled = true
 position = Vector2(1233, 120)
 Speed = 50.0
 
-[connection signal="SpawnInMain" from="PlayerCharacter" to="." method="OnAddChildToMain"]
+[node name="PlayerCharacter" parent="Main" instance=ExtResource("2_8hyis")]
+position = Vector2(1241, 234)
+scale = Vector2(0.8, 0.8)
+
+[node name="Camera2D" type="Camera2D" parent="Main/PlayerCharacter"]
+zoom = Vector2(3, 3)
+
+[connection signal="SpawnInMain" from="Main/PlayerCharacter" to="Main" method="OnAddChildToMain"]

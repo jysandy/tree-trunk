@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-public partial class Main : Node
+public partial class Main : Node2D
 {
 	private bool _navigationMapReady = false;
 
@@ -43,6 +43,3 @@ public partial class Main : Node
 		AddChild(node);
 	}
 }
-
-
-

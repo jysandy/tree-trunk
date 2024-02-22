@@ -66,7 +66,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	private void PlayIdleAnimation()
+	private void PlayRunningAnimation()
 	{
 		if (Velocity.Y > 0)
 		{
@@ -97,7 +97,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		return ToCardinalDirection(playerToMouse);
 	}
 
-	private void PlayRunningAnimation()
+	private void PlayIdleAnimation()
 	{
 		switch (DirectionOfPlayer())
 		{
@@ -127,11 +127,11 @@ public partial class PlayerCharacter : CharacterBody2D
 	{
 		if (IsMoving)
 		{
-			PlayIdleAnimation();
+			PlayRunningAnimation();
 		}
 		else
 		{
-			PlayRunningAnimation();
+			PlayIdleAnimation();
 		}
 	}
 
