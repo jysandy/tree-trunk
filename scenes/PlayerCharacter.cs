@@ -13,6 +13,9 @@ public partial class PlayerCharacter : CharacterBody2D
 	public float Speed { get; set; } = 300.0f;
 
 	[Export]
+	public double FireRate {get; set;} = 5.0;
+
+	[Export]
 	public PackedScene MeleeHurtbox;
 
 	[Export]
@@ -227,6 +230,18 @@ public partial class PlayerCharacter : CharacterBody2D
 		f();
 	}
 
+	private void SpawnBullet(Vector2 bulletDirection)
+	{
+		var velocity = bulletDirection * 600.0f;
+		var bullet = BulletScene.Instantiate<Bullet>();
+
+		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
+		bullet.Velocity = velocity;
+		bullet.GlobalRotation = velocity.Angle();
+
+		AddChildToMain(bullet);		
+	}
+
 	private void TriggerRangedAttack()
 	{
 		if (!_canShoot)
@@ -235,16 +250,8 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 		_canShoot = false;
 
-		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
-		var velocity = bulletDirection * 600.0f;
-		var bullet = BulletScene.Instantiate<Bullet>();
-
-		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
-		bullet.Velocity = velocity;
-		bullet.GlobalRotation = velocity.Angle() + Mathf.Tau / 2;
-
-		AddChildToMain(bullet);
-		RunLater(0.2, () => _canShoot = true);
+		SpawnBullet((GetGlobalMousePosition() - GlobalPosition).Normalized());
+		RunLater(1 / FireRate, () => _canShoot = true);
 	}
 
 	public override void _Input(InputEvent @event)
