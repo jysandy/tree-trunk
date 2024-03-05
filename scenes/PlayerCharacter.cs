@@ -1,14 +1,10 @@
 using Godot;
+using TreeTrunk;
 using System;
 using System.Diagnostics;
 
 public partial class PlayerCharacter : CharacterBody2D
 {
-	private enum CardinalDirection
-	{
-		Left, Right, Up, Down
-	}
-
 	[Export]
 	public float Speed { get; set; } = 300.0f;
 
@@ -40,26 +36,6 @@ public partial class PlayerCharacter : CharacterBody2D
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
 	private Marker2D RangedAttackSpawn { get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
-
-	private CardinalDirection ToCardinalDirection(Vector2 v)
-	{
-		if (v.X > 0 && (Mathf.Abs(v.X) > Mathf.Abs(v.Y)))
-		{
-			return CardinalDirection.Right;
-		}
-		else if (v.X < 0 && (Mathf.Abs(v.X) > Mathf.Abs(v.Y)))
-		{
-			return CardinalDirection.Left;
-		}
-		else if (v.Y < 0 && (Mathf.Abs(v.Y) > Mathf.Abs(v.X)))
-		{
-			return CardinalDirection.Up;
-		}
-		else
-		{
-			return CardinalDirection.Down;
-		}
-	}
 
 	private bool IsMoving
 	{
@@ -97,7 +73,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	private CardinalDirection DirectionOfPlayer()
 	{
 		var playerToMouse = GetGlobalMousePosition() - Position;
-		return ToCardinalDirection(playerToMouse);
+		return CardinalDirectionExtension.FromVector(playerToMouse);
 	}
 
 	private void PlayIdleAnimation()
@@ -141,7 +117,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	private MeleeAttackHurtbox CreateMeleeHurtbox(CardinalDirection direction)
 	{
 		var hurtbox = MeleeHurtbox.Instantiate<MeleeAttackHurtbox>();
-		hurtbox.GlobalRotationDegrees = RotationDegreesFromRight(direction);
+		hurtbox.GlobalRotationDegrees = direction.RotationDegreesFromRight();
 		hurtbox.GlobalPosition = MeleeAttackSpawnMarker(direction).GlobalPosition;
 
 		return hurtbox;
@@ -165,27 +141,10 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	private float RotationDegreesFromRight(CardinalDirection direction)
-	{
-		switch (direction)
-		{
-			case CardinalDirection.Left:
-				return 180;
-
-			case CardinalDirection.Right:
-				return 0;
-
-			case CardinalDirection.Up:
-				return 270;
-
-			default:
-				return 90;
-		}
-	}
 	private void PlayMeleeAttackAnimation(CardinalDirection direction)
 	{
 		MeleeAttackSprite.Position = MeleeAttackSpawnMarker(direction).Position;
-		MeleeAttackSprite.RotationDegrees = RotationDegreesFromRight(direction);
+		MeleeAttackSprite.RotationDegrees = direction.RotationDegreesFromRight();
 
 		MeleeAttackSprite.Visible = true;
 		MeleeAttackSprite.Play("attack-right");
