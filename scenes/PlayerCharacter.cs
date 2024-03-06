@@ -1,7 +1,6 @@
 using Godot;
 using TreeTrunk;
 using System;
-using System.Diagnostics;
 
 public partial class PlayerCharacter : CharacterBody2D
 {
@@ -9,7 +8,10 @@ public partial class PlayerCharacter : CharacterBody2D
 	public float Speed { get; set; } = 300.0f;
 
 	[Export]
-	public double FireRate {get; set;} = 5.0;
+	public double FireRate { get; set; } = 5.0;
+
+	[Export]
+	public int MaxAmmo { get; set; } = 10;
 
 	[Export]
 	public PackedScene MeleeHurtbox;
@@ -19,6 +21,26 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private bool _isMeleeAttacking = false;
 	private bool _canShoot = true;
+
+	private int _currentAmmoValue { get; set; }
+
+	private int CurrentAmmo
+	{
+		get { return _currentAmmoValue; }
+		set
+		{
+			int newValue = Math.Max(value, 0);
+
+			if (_currentAmmoValue != newValue)
+			{
+				_currentAmmoValue = newValue;
+				EmitSignal(SignalName.CurrentAmmoChanged, newValue);
+			}
+		}
+	}
+
+	[Signal]
+	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
 
 	[Signal]
 	public delegate void SpawnInMainEventHandler(Node2D node);
@@ -174,19 +196,13 @@ public partial class PlayerCharacter : CharacterBody2D
 		AddChildToMain(hurtbox);
 		PlayMeleeAttackAnimation(direction);
 
-		RunLater(0.2, () =>
+		this.RunLater(0.2, () =>
 		{
 			_isMeleeAttacking = false;
 			hurtbox.QueueFree();
 			StopMeleeAttackAnimation();
 		}
 		);
-	}
-
-	private async void RunLater(double timeSeconds, Action f)
-	{
-		await ToSignal(GetTree().CreateTimer(timeSeconds), SceneTreeTimer.SignalName.Timeout);
-		f();
 	}
 
 	private void SpawnBullet(Vector2 bulletDirection)
@@ -198,7 +214,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		bullet.Velocity = velocity;
 		bullet.GlobalRotation = velocity.Angle();
 
-		AddChildToMain(bullet);		
+		AddChildToMain(bullet);
 	}
 
 	private void TriggerRangedAttack()
@@ -207,10 +223,22 @@ public partial class PlayerCharacter : CharacterBody2D
 		{
 			return;
 		}
+		if (CurrentAmmo <= 0)
+		{
+			return;
+		}
+
 		_canShoot = false;
+		CurrentAmmo -= 1;
 
 		SpawnBullet((GetGlobalMousePosition() - GlobalPosition).Normalized());
-		RunLater(1 / FireRate, () => _canShoot = true);
+		this.RunLater(1 / FireRate, () => _canShoot = true);
+	}
+
+	public override void _Ready()
+	{
+		base._Ready();
+		CurrentAmmo = MaxAmmo;
 	}
 
 	public override void _Input(InputEvent @event)

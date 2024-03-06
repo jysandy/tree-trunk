@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cuqrd2iw2xlug"]
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="AmmoCount" type="Label" parent="."]
+offset_left = 33.0
+offset_top = 1008.0
+offset_right = 86.0
+offset_bottom = 1031.0
+scale = Vector2(2, 2)
+text = "AMMO
+"
+metadata/_edit_use_anchors_ = true

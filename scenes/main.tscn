@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cr3h4wmgwvypu"]
+[gd_scene load_steps=9 format=3 uid="uid://cr3h4wmgwvypu"]
 
 [ext_resource type="Script" path="res://scenes/Main.cs" id="1_6rebb"]
 [ext_resource type="TileSet" uid="uid://eaibkmkcy5pc" path="res://resources/magic-lands-set4.tres" id="1_um1rc"]
 [ext_resource type="PackedScene" uid="uid://nlyux760ykgh" path="res://scenes/player_character.tscn" id="2_8hyis"]
 [ext_resource type="PackedScene" uid="uid://byovaei4ckxmp" path="res://scenes/critter.tscn" id="3_ifydr"]
+[ext_resource type="PackedScene" uid="uid://cuqrd2iw2xlug" path="res://scenes/HUD.tscn" id="5_17c8f"]
+[ext_resource type="Script" path="res://scenes/HUD.cs" id="6_6fkip"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_kbd6h"]
 vertices = PackedVector2Array(1310, 291, 1337, 319, 1223, 319, 1180, 194, 1189, 254, 1126, 254, 1125, 249, 1125, 221, 1148, 162, 1310, 251, 1219, 316, 1219, 283, 1285, 194, 1090, 187, 1090, 163, 1092, 162, 1343, 218, 1314, 165, 1339, 130, 1342, 133, 1314, 132, 1315, 130, 1062, 223, 1086, 230, 1073, 241, 3699, -1100, 3693, 2219, 1371, 316, 1371, 267, 1370, 341, 1113, 300, 1189, 298, 1189, 341, -1586, 2219, -1577, -1096, 1073, 293, 1339, 284, 1339, 267, 1371, 125, 1349, 363, 1349, 102, 1309, 103, 1286, 122, 1109, 290, 1286, 155, 1276, 166, 1158, 134, 1191, 166, 1084, 134, 1062, 156, 1212, 362)
@@ -57,4 +59,8 @@ FireRate = 3.0
 [node name="Camera2D" type="Camera2D" parent="Main/PlayerCharacter"]
 zoom = Vector2(3, 3)
 
+[node name="HUD" parent="." instance=ExtResource("5_17c8f")]
+script = ExtResource("6_6fkip")
+
+[connection signal="CurrentAmmoChanged" from="Main/PlayerCharacter" to="HUD" method="OnPlayerCharacterCurrentAmmoChanged"]
 [connection signal="SpawnInMain" from="Main/PlayerCharacter" to="Main" method="OnAddChildToMain"]
