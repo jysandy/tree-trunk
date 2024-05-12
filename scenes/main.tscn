@@ -54,7 +54,6 @@ Speed = 50.0
 [node name="PlayerCharacter" parent="Main" instance=ExtResource("2_8hyis")]
 position = Vector2(1152, 98)
 scale = Vector2(0.8, 0.8)
-FireRate = 3.0
 
 [node name="Camera2D" type="Camera2D" parent="Main/PlayerCharacter"]
 zoom = Vector2(3, 3)

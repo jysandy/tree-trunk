@@ -1,6 +1,5 @@
 using Godot;
 using TreeTrunk;
-using System;
 
 public partial class PlayerCharacter : CharacterBody2D
 {
@@ -8,42 +7,21 @@ public partial class PlayerCharacter : CharacterBody2D
 	public float Speed { get; set; } = 300.0f;
 
 	[Export]
-	public double FireRate { get; set; } = 5.0;
-
-	[Export]
-	public int MaxAmmo { get; set; } = 10;
-
-	[Export]
 	public PackedScene MeleeHurtbox;
 
-	[Export]
-	public PackedScene BulletScene;
-
 	private bool _isMeleeAttacking = false;
-	private bool _canShoot = true;
 
-	private int _currentAmmoValue { get; set; }
-
-	private int CurrentAmmo
-	{
-		get { return _currentAmmoValue; }
-		set
-		{
-			int newValue = Math.Max(value, 0);
-
-			if (_currentAmmoValue != newValue)
-			{
-				_currentAmmoValue = newValue;
-				EmitSignal(SignalName.CurrentAmmoChanged, newValue);
-			}
-		}
-	}
+	[Signal]
+	public delegate void SpawnInMainEventHandler(Node2D node);
 
 	[Signal]
 	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
 
-	[Signal]
-	public delegate void SpawnInMainEventHandler(Node2D node);
+
+	private void OnPistolCurrentAmmoChanged(long newCurrentAmmoValue)
+	{
+		EmitSignal(SignalName.CurrentAmmoChanged, newCurrentAmmoValue);
+	}
 
 	private void SetVelocityFromInput()
 	{
@@ -205,40 +183,24 @@ public partial class PlayerCharacter : CharacterBody2D
 		);
 	}
 
-	private void SpawnBullet(Vector2 bulletDirection)
-	{
-		var velocity = bulletDirection * 600.0f;
-		var bullet = BulletScene.Instantiate<Bullet>();
-
-		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
-		bullet.Velocity = velocity;
-		bullet.GlobalRotation = velocity.Angle();
-
-		AddChildToMain(bullet);
-	}
-
 	private void TriggerRangedAttack()
 	{
-		if (!_canShoot)
-		{
-			return;
-		}
-		if (CurrentAmmo <= 0)
-		{
-			return;
-		}
 
-		_canShoot = false;
-		CurrentAmmo -= 1;
+		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
 
-		SpawnBullet((GetGlobalMousePosition() - GlobalPosition).Normalized());
-		this.RunLater(1 / FireRate, () => _canShoot = true);
+		var bullet = GetNode<Pistol>("Pistol")
+		.TriggerRangedAttack(bulletDirection);
+
+		if (bullet != null)
+		{
+			bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
+			AddChildToMain(bullet);
+		}
 	}
 
 	public override void _Ready()
 	{
 		base._Ready();
-		CurrentAmmo = MaxAmmo;
 	}
 
 	public override void _Input(InputEvent @event)
