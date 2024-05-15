@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 using TreeTrunk;
 
@@ -11,16 +12,21 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private bool _isMeleeAttacking = false;
 
+	private PackedScene _pistolScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Pistol.tscn");
+
+	private RangedWeapon[] _weapons;
+
+	private int _equippedWeaponIndex = 0;
+
 	[Signal]
 	public delegate void SpawnInMainEventHandler(Node2D node);
 
 	[Signal]
 	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
 
-
-	private void OnPistolCurrentAmmoChanged(long newCurrentAmmoValue)
+	private void EmitCurrentAmmoChanged()
 	{
-		EmitSignal(SignalName.CurrentAmmoChanged, newCurrentAmmoValue);
+		EmitSignal(SignalName.CurrentAmmoChanged, CurrentWeapon.CurrentAmmo);
 	}
 
 	private void SetVelocityFromInput()
@@ -36,6 +42,8 @@ public partial class PlayerCharacter : CharacterBody2D
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
 	private Marker2D RangedAttackSpawn { get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
+
+	private RangedWeapon CurrentWeapon { get { return _weapons[_equippedWeaponIndex]; } }
 
 	private bool IsMoving
 	{
@@ -188,8 +196,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
 
-		var bullet = GetNode<Pistol>("Pistol")
-		.TriggerRangedAttack(bulletDirection);
+		var bullet = CurrentWeapon.TriggerRangedAttack(bulletDirection);
 
 		if (bullet != null)
 		{
@@ -201,6 +208,15 @@ public partial class PlayerCharacter : CharacterBody2D
 	public override void _Ready()
 	{
 		base._Ready();
+		// TODO: change this when changing the pistol from a scene to just a class
+		_weapons = new RangedWeapon[] { _pistolScene.Instantiate<RangedWeapon>() };
+		foreach (var weapon in _weapons)
+		{
+			AddChild(weapon);
+			weapon.Connect(RangedWeapon.SignalName.CurrentAmmoChanged,
+				Callable.From<int>((_) => EmitCurrentAmmoChanged()));
+		}
+		EmitCurrentAmmoChanged();
 	}
 
 	public override void _Input(InputEvent @event)

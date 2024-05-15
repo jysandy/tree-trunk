@@ -1,7 +1,8 @@
 using Godot;
-using System;
 using TreeTrunk;
-public partial class Pistol : Node2D
+
+// TODO: Remove this from the visual editor
+public partial class Pistol : RangedWeapon
 {
 
 	[Export]
@@ -15,26 +16,6 @@ public partial class Pistol : Node2D
 
 	private bool _canShoot = true;
 
-	private int _currentAmmoValue { get; set; }
-
-	private int CurrentAmmo
-	{
-		get { return _currentAmmoValue; }
-		set
-		{
-			int newValue = Math.Max(value, 0);
-
-			if (_currentAmmoValue != newValue)
-			{
-				_currentAmmoValue = newValue;
-				EmitSignal(SignalName.CurrentAmmoChanged, newValue);
-			}
-		}
-	}
-
-	[Signal]
-	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
-
 	private Bullet BuildBullet(Vector2 bulletDirection)
 	{
 		var velocity = bulletDirection * 600.0f;
@@ -46,7 +27,7 @@ public partial class Pistol : Node2D
 		return bullet;
 	}
 
-	public Bullet TriggerRangedAttack(Vector2 bulletDirection)
+	public override Bullet TriggerRangedAttack(Vector2 bulletDirection)
 	{
 		if (!_canShoot)
 		{
@@ -64,7 +45,6 @@ public partial class Pistol : Node2D
 		return BuildBullet(bulletDirection);
 
 	}
-
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
