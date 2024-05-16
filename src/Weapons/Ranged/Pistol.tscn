@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://0yr4efxa0m7n"]
-
-[ext_resource type="Script" path="res://src/Weapons/Ranged/Pistol.cs" id="1_1lhut"]
-[ext_resource type="PackedScene" uid="uid://gd4c8ayuwlq4" path="res://scenes/Bullet.tscn" id="2_xy0y0"]
-
-[node name="Pistol" type="Node"]
-script = ExtResource("1_1lhut")
-BulletScene = ExtResource("2_xy0y0")

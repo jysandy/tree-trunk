@@ -12,8 +12,6 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private bool _isMeleeAttacking = false;
 
-	private PackedScene _pistolScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Pistol.tscn");
-
 	private RangedWeapon[] _weapons;
 
 	private int _equippedWeaponIndex = 0;
@@ -208,8 +206,8 @@ public partial class PlayerCharacter : CharacterBody2D
 	public override void _Ready()
 	{
 		base._Ready();
-		// TODO: change this when changing the pistol from a scene to just a class
-		_weapons = new RangedWeapon[] { _pistolScene.Instantiate<RangedWeapon>() };
+
+		_weapons = new RangedWeapon[] { new Pistol() };
 		foreach (var weapon in _weapons)
 		{
 			AddChild(weapon);

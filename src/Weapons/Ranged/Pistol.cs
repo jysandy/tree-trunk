@@ -1,12 +1,11 @@
 using Godot;
 using TreeTrunk;
 
-// TODO: Remove this from the visual editor
 public partial class Pistol : RangedWeapon
 {
 
 	[Export]
-	public PackedScene BulletScene;
+	public PackedScene BulletScene = GD.Load<PackedScene>("res://scenes/Bullet.tscn");
 
 	[Export]
 	public double FireRate { get; set; } = 5.0;
