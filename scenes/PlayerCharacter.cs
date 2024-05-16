@@ -207,13 +207,26 @@ public partial class PlayerCharacter : CharacterBody2D
 	{
 		base._Ready();
 
-		_weapons = new RangedWeapon[] { new Pistol() };
+		var slowerPistol = new Pistol
+		{
+			FireRate = 2.0,
+			MaxAmmo = 5
+		};
+
+		_weapons = new RangedWeapon[] { new Pistol(), slowerPistol };
+
 		foreach (var weapon in _weapons)
 		{
 			AddChild(weapon);
 			weapon.Connect(RangedWeapon.SignalName.CurrentAmmoChanged,
 				Callable.From<int>((_) => EmitCurrentAmmoChanged()));
 		}
+		EmitCurrentAmmoChanged();
+	}
+
+	public void CycleWeapon()
+	{
+		_equippedWeaponIndex = (_equippedWeaponIndex + 1) % _weapons.Length;
 		EmitCurrentAmmoChanged();
 	}
 
@@ -224,6 +237,10 @@ public partial class PlayerCharacter : CharacterBody2D
 		if (Input.IsActionJustPressed("melee_attack"))
 		{
 			TriggerMeleeAttack(DirectionOfPlayer());
+		}
+		else if (Input.IsActionJustPressed("cycle_weapon"))
+		{
+			CycleWeapon();
 		}
 	}
 
