@@ -182,9 +182,9 @@ public partial class PlayerCharacter : CharacterBody2D
 
 		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
 
-		var bullet = CurrentWeapon.TriggerRangedAttack(bulletDirection);
+		var bullets = CurrentWeapon.TriggerRangedAttack(bulletDirection);
 
-		if (bullet != null)
+		foreach (Bullet bullet in bullets)
 		{
 			bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 			AddChildToMain(bullet);
@@ -195,13 +195,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	{
 		base._Ready();
 
-		var slowerPistol = new Pistol
-		{
-			FireRate = 2.0,
-			MaxAmmo = 5
-		};
-
-		_weapons = new RangedWeapon[] { new Pistol(), slowerPistol };
+		_weapons = new RangedWeapon[] { new Pistol(), new Shotgun() };
 
 		foreach (var weapon in _weapons)
 		{

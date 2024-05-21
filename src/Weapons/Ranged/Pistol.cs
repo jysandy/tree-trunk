@@ -26,26 +26,25 @@ public partial class Pistol : RangedWeapon
 		return bullet;
 	}
 
-	public override Bullet TriggerRangedAttack(Vector2 bulletDirection)
+	public override Bullet[] TriggerRangedAttack(Vector2 bulletDirection)
 	{
 		if (!_canShoot)
 		{
-			return null;
+			return new Bullet[] {};
 		}
 		if (CurrentAmmo <= 0)
 		{
-			return null;
+			return new Bullet[] {};
 		}
 
 		_canShoot = false;
 		CurrentAmmo -= 1;
 
 		this.RunLater(1 / FireRate, () => _canShoot = true);
-		return BuildBullet(bulletDirection);
+		return new Bullet[] { BuildBullet(bulletDirection) };
 
 	}
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		CurrentAmmo = MaxAmmo;

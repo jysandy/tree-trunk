@@ -28,8 +28,11 @@ public partial class Bullet : CharacterBody2D, IAttack
 			Shape = GetShape2DFromChildren()
 		};
 		bulletHurtbox.AddChild(hurtboxCollisionShape);
+		bulletHurtbox.CollisionLayer = 0;
+		bulletHurtbox.CollisionMask = 0;
 		bulletHurtbox.SetCollisionLayerValue(4, true); // player_attack_hurtbox
 		bulletHurtbox.SetCollisionMaskValue(2, true); // enemy_hitboxes
+		bulletHurtbox.AreaEntered += OnBulletHurtboxAreaEntered;
 
 		AddChild(bulletHurtbox);
 
