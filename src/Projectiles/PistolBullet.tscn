@@ -1,0 +1,59 @@
+[gd_scene load_steps=9 format=3 uid="uid://1vfkpudp515w"]
+
+[ext_resource type="Script" path="res://src/Projectiles/Bullet.cs" id="1_377u2"]
+[ext_resource type="Texture2D" uid="uid://dgs7jcsq3uiu6" path="res://assets/tech-dungeon/Projectiles/projectiles-x3.png" id="2_dhyky"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bwb7o"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jk77w"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlntw"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03jqd"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(288, 0, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g6768"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bwb7o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jk77w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hlntw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_03jqd")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e5fse"]
+size = Vector2(22, 4)
+
+[node name="PistolBullet" type="CharacterBody2D"]
+z_index = 1
+y_sort_enabled = true
+collision_layer = 0
+motion_mode = 1
+script = ExtResource("1_377u2")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -2)
+sprite_frames = SubResource("SpriteFrames_g6768")
+frame_progress = 0.38591
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_e5fse")

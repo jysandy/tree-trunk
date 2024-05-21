@@ -5,13 +5,13 @@ public partial class Pistol : RangedWeapon
 {
 
 	[Export]
-	public PackedScene BulletScene = GD.Load<PackedScene>("res://scenes/Bullet.tscn");
+	public PackedScene BulletScene = GD.Load<PackedScene>("res://src/Projectiles/PistolBullet.tscn");
 
 	[Export]
 	public double FireRate { get; set; } = 5.0;
 
 	[Export]
-	public int MaxAmmo { get; set; } = 10;
+	public int MaxAmmo { get; set; } = 100;
 
 	private bool _canShoot = true;
 

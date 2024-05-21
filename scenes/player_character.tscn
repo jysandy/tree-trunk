@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://nlyux760ykgh"]
+[gd_scene load_steps=52 format=3 uid="uid://nlyux760ykgh"]
 
 [ext_resource type="Script" path="res://scenes/PlayerCharacter.cs" id="1_qnhp3"]
 [ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
@@ -49,16 +49,6 @@
 [ext_resource type="Texture2D" uid="uid://dgvw87ncs4aod" path="res://assets/world-and-dungeon/player/run/run-up-03.png" id="41_1y7y8"]
 [ext_resource type="Texture2D" uid="uid://bjnsycqyb2ofi" path="res://assets/world-and-dungeon/player/run/run-up-04.png" id="42_qumq4"]
 [ext_resource type="Texture2D" uid="uid://5sgcwxd8sp7s" path="res://assets/world-and-dungeon/player/run/run-up-05.png" id="43_ungfb"]
-[ext_resource type="PackedScene" uid="uid://da0tg32bbncly" path="res://scenes/MeleeAttackHurtbox.tscn" id="50_bhm3k"]
-[ext_resource type="Texture2D" uid="uid://dgmqtnr1g4ogx" path="res://assets/custom/player/melee-animation/Melee_Animation_export-1.png" id="51_2kjgi"]
-[ext_resource type="Texture2D" uid="uid://b40jpbm3oaihh" path="res://assets/custom/player/melee-animation/Melee_Animation_export-2.png" id="52_5roa5"]
-[ext_resource type="Texture2D" uid="uid://c6blaft2jhtnn" path="res://assets/custom/player/melee-animation/Melee_Animation_export-3.png" id="53_xqlk8"]
-[ext_resource type="Texture2D" uid="uid://cil2g32p2i11h" path="res://assets/custom/player/melee-animation/Melee_Animation_export-4.png" id="54_xo5oa"]
-[ext_resource type="Texture2D" uid="uid://demfs1jtx54mt" path="res://assets/custom/player/melee-animation/Melee_Animation_export-5.png" id="55_4e6ed"]
-[ext_resource type="Texture2D" uid="uid://b28tjlbn5g102" path="res://assets/custom/player/melee-animation/Melee_Animation_export-6.png" id="56_8740l"]
-[ext_resource type="Texture2D" uid="uid://f0v76pcjqbwt" path="res://assets/custom/player/melee-animation/Melee_Animation_export-7.png" id="57_dimur"]
-[ext_resource type="Texture2D" uid="uid://kr6gg5whiboj" path="res://assets/custom/player/melee-animation/Melee_Animation_export-8.png" id="58_esafs"]
-[ext_resource type="Texture2D" uid="uid://cvi1q445utqb4" path="res://assets/custom/player/melee-animation/Melee_Animation_export-9.png" id="59_xse07"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v1wuj"]
 animations = [{
@@ -238,48 +228,12 @@ animations = [{
 radius = 9.0
 height = 20.0
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_mbu0a"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("51_2kjgi")
-}, {
-"duration": 1.0,
-"texture": ExtResource("52_5roa5")
-}, {
-"duration": 1.0,
-"texture": ExtResource("53_xqlk8")
-}, {
-"duration": 1.0,
-"texture": ExtResource("54_xo5oa")
-}, {
-"duration": 1.0,
-"texture": ExtResource("55_4e6ed")
-}, {
-"duration": 1.0,
-"texture": ExtResource("56_8740l")
-}, {
-"duration": 1.0,
-"texture": ExtResource("57_dimur")
-}, {
-"duration": 1.0,
-"texture": ExtResource("58_esafs")
-}, {
-"duration": 1.0,
-"texture": ExtResource("59_xse07")
-}],
-"loop": false,
-"name": &"attack-right",
-"speed": 45.0
-}]
-
 [node name="PlayerCharacter" type="CharacterBody2D"]
 z_index = 1
 collision_layer = 16
 collision_mask = 33
 motion_mode = 1
 script = ExtResource("1_qnhp3")
-MeleeHurtbox = ExtResource("50_bhm3k")
 metadata/_edit_group_ = true
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
@@ -305,17 +259,6 @@ position = Vector2(2.08165e-12, -39)
 
 [node name="RightMeleeAttackSpawn" type="Marker2D" parent="."]
 position = Vector2(18, -9)
-
-[node name="MeleeAttackSprite" type="AnimatedSprite2D" parent="."]
-visible = false
-z_index = 1
-position = Vector2(-1.90735e-06, -39)
-rotation = 4.71239
-scale = Vector2(0.08, 0.08)
-sprite_frames = SubResource("SpriteFrames_mbu0a")
-animation = &"attack-right"
-frame = 8
-frame_progress = 1.0
 
 [node name="RangedAttackSpawn" type="Marker2D" parent="."]
 position = Vector2(0, -19)

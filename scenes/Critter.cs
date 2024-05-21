@@ -122,7 +122,7 @@ public partial class Critter : CharacterBody2D
 			return;
 		}
 
-		var attack = (IAttack)area;
+		var attack = area.GetParent<IAttack>();
 
 		_currentHealth = Mathf.Clamp(_currentHealth - attack.Damage, 0, MaxHealth);
 

@@ -7,8 +7,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	[Export]
 	public float Speed { get; set; } = 300.0f;
 
-	[Export]
-	public PackedScene MeleeHurtbox;
+	public PackedScene MeleeAttack = GD.Load<PackedScene>("res://src/Weapons/Melee/MeleeAttack.tscn");
 
 	private bool _isMeleeAttacking = false;
 
@@ -120,13 +119,13 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	private MeleeAttackHurtbox CreateMeleeHurtbox(CardinalDirection direction)
+	private MeleeAttack CreateMeleeAttack(CardinalDirection direction)
 	{
-		var hurtbox = MeleeHurtbox.Instantiate<MeleeAttackHurtbox>();
-		hurtbox.GlobalRotationDegrees = direction.RotationDegreesFromRight();
-		hurtbox.GlobalPosition = MeleeAttackSpawnMarker(direction).GlobalPosition;
+		var attack = MeleeAttack.Instantiate<MeleeAttack>();
+		attack.GlobalRotationDegrees = direction.RotationDegreesFromRight();
+		attack.GlobalPosition = MeleeAttackSpawnMarker(direction).GlobalPosition;
 
-		return hurtbox;
+		return attack;
 	}
 
 	private Marker2D MeleeAttackSpawnMarker(CardinalDirection direction)
@@ -147,15 +146,6 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	private void PlayMeleeAttackAnimation(CardinalDirection direction)
-	{
-		MeleeAttackSprite.Position = MeleeAttackSpawnMarker(direction).Position;
-		MeleeAttackSprite.RotationDegrees = direction.RotationDegreesFromRight();
-
-		MeleeAttackSprite.Visible = true;
-		MeleeAttackSprite.Play("attack-right");
-	}
-
 	private void StopMeleeAttackAnimation()
 	{
 		MeleeAttackSprite.Visible = false;
@@ -174,17 +164,15 @@ public partial class PlayerCharacter : CharacterBody2D
 			return;
 		}
 
-		var hurtbox = CreateMeleeHurtbox(direction);
+		var attack = CreateMeleeAttack(direction);
 
 		_isMeleeAttacking = true;
-		AddChildToMain(hurtbox);
-		PlayMeleeAttackAnimation(direction);
+		AddChildToMain(attack);
 
 		this.RunLater(0.2, () =>
 		{
 			_isMeleeAttacking = false;
-			hurtbox.QueueFree();
-			StopMeleeAttackAnimation();
+			attack.QueueFree();
 		}
 		);
 	}
