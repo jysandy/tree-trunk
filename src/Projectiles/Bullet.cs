@@ -53,10 +53,15 @@ public partial class Bullet : CharacterBody2D, IAttack
 
 		if (collision != null)
 		{
-			QueueFree();
+			OnBulletCollided();
 		}
 	}
 	private void OnBulletHurtboxAreaEntered(Area2D area)
+	{
+		OnBulletCollided();
+	}
+
+	protected virtual void OnBulletCollided()
 	{
 		QueueFree();
 	}

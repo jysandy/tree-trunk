@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c1ap4kfls221u"]
+[gd_scene load_steps=14 format=3 uid="uid://c1ap4kfls221u"]
 
 [ext_resource type="Script" path="res://src/Projectiles/ShotgunBullet.cs" id="1_fd08d"]
 [ext_resource type="Texture2D" uid="uid://cgrcoc04wm103" path="res://assets/tech-dungeon/Projectiles/projectiles-x1.png" id="2_2rvdw"]
@@ -42,16 +42,60 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_0x61y"]
 radius = 3.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_puman"]
+atlas = ExtResource("2_2rvdw")
+region = Rect2(0, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tk0xh"]
+atlas = ExtResource("2_2rvdw")
+region = Rect2(32, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_caxox"]
+atlas = ExtResource("2_2rvdw")
+region = Rect2(64, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n0u7f"]
+atlas = ExtResource("2_2rvdw")
+region = Rect2(96, 160, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1grxe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_puman")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tk0xh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_caxox")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n0u7f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="ShotgunBullet" type="CharacterBody2D"]
 script = ExtResource("1_fd08d")
 Damage = 10.0
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="BulletAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_bxxb5")
 autoplay = "default"
-frame_progress = 0.966246
+frame_progress = 0.342589
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_0x61y")
+
+[node name="CollisionAnimation" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(-14, -1)
+sprite_frames = SubResource("SpriteFrames_1grxe")
+frame = 3
+frame_progress = 1.0

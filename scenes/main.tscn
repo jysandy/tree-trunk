@@ -50,6 +50,7 @@ z_index = 1
 y_sort_enabled = true
 position = Vector2(1235, -145)
 Speed = 50.0
+MaxHealth = 10000.0
 
 [node name="PlayerCharacter" parent="Main" instance=ExtResource("2_8hyis")]
 position = Vector2(1152, 98)
