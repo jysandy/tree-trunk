@@ -96,7 +96,7 @@ frame_progress = 0.38591
 shape = SubResource("RectangleShape2D_e5fse")
 
 [node name="CollisionAnimation" type="AnimatedSprite2D" parent="."]
-position = Vector2(-24, -3)
+position = Vector2(-26, -3)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_jgr0o")
 frame = 3
