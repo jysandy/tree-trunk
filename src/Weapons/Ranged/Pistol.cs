@@ -11,7 +11,7 @@ public partial class Pistol : RangedWeapon
 	public double FireRate { get; set; } = 5.0;
 
 	[Export]
-	public int MaxAmmo { get; set; } = 100;
+	public override int MaxAmmo { get; set; } = 10;
 
 	private bool _canShoot = true;
 
@@ -47,6 +47,7 @@ public partial class Pistol : RangedWeapon
 
 	public override void _Ready()
 	{
+		base._Ready();
 		CurrentAmmo = MaxAmmo;
 	}
 }
