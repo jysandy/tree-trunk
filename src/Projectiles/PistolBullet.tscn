@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://1vfkpudp515w"]
+[gd_scene load_steps=14 format=3 uid="uid://1vfkpudp515w"]
 
-[ext_resource type="Script" path="res://src/Projectiles/Bullet.cs" id="1_377u2"]
+[ext_resource type="Script" path="res://src/Projectiles/PistolBullet.cs" id="1_425cs"]
 [ext_resource type="Texture2D" uid="uid://dgs7jcsq3uiu6" path="res://assets/tech-dungeon/Projectiles/projectiles-x3.png" id="2_dhyky"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bwb7o"]
@@ -42,15 +42,51 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e5fse"]
 size = Vector2(22, 4)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bn1jj"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(0, 384, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l7pxn"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(96, 384, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_475o3"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(192, 384, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a210a"]
+atlas = ExtResource("2_dhyky")
+region = Rect2(288, 384, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jgr0o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bn1jj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l7pxn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_475o3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a210a")
+}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}]
+
 [node name="PistolBullet" type="CharacterBody2D"]
 z_index = 1
 y_sort_enabled = true
 collision_layer = 0
 motion_mode = 1
-script = ExtResource("1_377u2")
+script = ExtResource("1_425cs")
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="BulletAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -2)
 sprite_frames = SubResource("SpriteFrames_g6768")
 autoplay = "default"
@@ -58,3 +94,10 @@ frame_progress = 0.38591
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_e5fse")
+
+[node name="CollisionAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(-24, -3)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_jgr0o")
+frame = 3
+frame_progress = 1.0

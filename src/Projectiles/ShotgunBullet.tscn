@@ -73,7 +73,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_n0u7f")
 }],
-"loop": true,
+"loop": false,
 "name": &"default",
 "speed": 5.0
 }]
@@ -87,7 +87,7 @@ metadata/_edit_group_ = true
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_bxxb5")
 autoplay = "default"
-frame_progress = 0.342589
+frame_progress = 0.321313
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
