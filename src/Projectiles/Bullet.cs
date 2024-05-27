@@ -4,8 +4,19 @@ using TreeTrunk;
 // Attach this script to any Bullet.
 public partial class Bullet : CharacterBody2D, IAttack
 {
+	public enum BulletTypeEnum
+	{
+		PlayerFired,
+		EnemyFired
+	}
+
 	[Export]
 	public float Damage { get; set; } = 30;
+
+	// Who fired the bullet.
+	// Affects the entities that the bullet detects collisions with.
+	[Export]
+	public virtual BulletTypeEnum BulletType {get; set;} = BulletTypeEnum.PlayerFired;
 
 	// Returns the Shape2D assigned to the CollisionPolygon2D or CollisionShape2D
 	// child of this node.
@@ -30,8 +41,18 @@ public partial class Bullet : CharacterBody2D, IAttack
 		bulletHurtbox.AddChild(hurtboxCollisionShape);
 		bulletHurtbox.CollisionLayer = 0;
 		bulletHurtbox.CollisionMask = 0;
-		bulletHurtbox.SetCollisionLayerValue(4, true); // player_attack_hurtbox
-		bulletHurtbox.SetCollisionMaskValue(2, true); // enemy_hitboxes
+
+		if (BulletType == BulletTypeEnum.PlayerFired)
+		{
+			bulletHurtbox.SetCollisionLayerValue(4, true); // player_attack_hurtbox
+			bulletHurtbox.SetCollisionMaskValue(2, true); // enemy_hitboxes
+		}
+		else if (BulletType == BulletTypeEnum.EnemyFired)
+		{
+			bulletHurtbox.SetCollisionLayerValue(7, true); // enemy_attack_hurtbox
+			bulletHurtbox.SetCollisionMaskValue(3, true); // player_hitbox
+		}
+
 		bulletHurtbox.AreaEntered += OnBulletHurtboxAreaEntered;
 
 		AddChild(bulletHurtbox);
@@ -40,7 +61,7 @@ public partial class Bullet : CharacterBody2D, IAttack
 		MotionMode = MotionModeEnum.Floating;
 		CollisionLayer = 0;
 		CollisionMask = 0;
-		SetCollisionMaskValue(1, true);
+		SetCollisionMaskValue(1, true); // walls
 		ZIndex = 1;
 		YSortEnabled = true;
 	}

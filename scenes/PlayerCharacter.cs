@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using Godot;
 using TreeTrunk;
 
+// TODO: Take damage from projectiles and die
 public partial class PlayerCharacter : CharacterBody2D
 {
 	[Export]

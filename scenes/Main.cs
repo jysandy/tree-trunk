@@ -2,7 +2,7 @@ using Godot;
 
 public partial class Main : Node2D
 {
-	private bool _navigationMapReady = false;
+	public bool NavigationMapReady {get; set;} = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -16,10 +16,10 @@ public partial class Main : Node2D
 	{
 		// Wait for the first physics frame so the NavigationServer can sync.
 		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
-		_navigationMapReady = true;
+		NavigationMapReady = true;
 	}
 
-	private PlayerCharacter Player
+	public PlayerCharacter Player
 	{
 		get { return GetNode<PlayerCharacter>("PlayerCharacter"); }
 	}
@@ -27,14 +27,6 @@ public partial class Main : Node2D
 	private Critter Critter
 	{
 		get { return GetNode<Critter>("Critter"); }
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		if (_navigationMapReady)
-		{
-			Critter.MovementTarget = Player.GlobalTransform.Origin;
-		}
 	}
 
 	private void OnAddChildToMain(Node2D node)

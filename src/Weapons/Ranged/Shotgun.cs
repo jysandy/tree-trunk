@@ -20,6 +20,7 @@ public partial class Shotgun : RangedWeapon
         var velocity = bulletDirection * 600.0f;
         var bullet = BulletScene.Instantiate<Bullet>();
 
+        // Add some spread to the shotgun pellets.
         bullet.Velocity = velocity.Rotated(Mathf.DegToRad((float)GD.Randfn(0.0, 1.0) * 5));
         bullet.GlobalRotation = velocity.Angle();
 

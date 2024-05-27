@@ -1,0 +1,2 @@
+* There needs to be a class that is independent of the scene tree which manages entities and their state. 
+* This class can also take care of spawning new entities and placing them in the correct place in the scene tree. Then the strange signal spawning system can perhaps be replaced.

@@ -62,5 +62,6 @@ zoom = Vector2(3, 3)
 [node name="HUD" parent="." instance=ExtResource("5_17c8f")]
 script = ExtResource("6_6fkip")
 
+[connection signal="SpawnInMain" from="Main/Critter" to="Main" method="OnAddChildToMain"]
 [connection signal="CurrentAmmoChanged" from="Main/PlayerCharacter" to="HUD" method="OnPlayerCharacterCurrentAmmoChanged"]
 [connection signal="SpawnInMain" from="Main/PlayerCharacter" to="Main" method="OnAddChildToMain"]

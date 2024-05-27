@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Godot;
 using TreeTrunk;
 
@@ -10,9 +9,23 @@ public partial class Critter : CharacterBody2D
 	[Export]
 	public float MaxHealth = 200.0f;
 
-	float _currentHealth = 0.0f;
+	private float _currentHealth = 0.0f;
+
+	private bool _canShoot = true;
+
+	[Signal]
+	public delegate void SpawnInMainEventHandler(Node2D node);
+
+	public bool NavigationMapReady { get { return GetParent<Main>().NavigationMapReady; } }
 
 	public bool IsDead { get { return _currentHealth <= 0; } }
+
+	public PackedScene BulletScene = GD.Load<PackedScene>("res://src/Projectiles/CritterBullet.tscn");
+
+	private PlayerCharacter Player
+	{
+		get { return GetParent<Main>().Player; }
+	}
 
 	private NavigationAgent2D NavigationAgent
 	{ get { return GetNode<NavigationAgent2D>("NavigationAgent2D"); } }
@@ -26,6 +39,9 @@ public partial class Critter : CharacterBody2D
 	private CollisionShape2D PhysicsHitbox
 	{ get { return GetNode<CollisionShape2D>("PhysicsHitbox"); } }
 
+	private Marker2D RangedAttackSpawn
+	{ get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
+
 	public Vector2 MovementTarget
 	{
 		get { return NavigationAgent.TargetPosition; }
@@ -36,6 +52,11 @@ public partial class Critter : CharacterBody2D
 				NavigationAgent.TargetPosition = value;
 			}
 		}
+	}
+
+	private void AddChildToMain(Node2D node)
+	{
+		EmitSignal(SignalName.SpawnInMain, node);
 	}
 
 	public override void _Ready()
@@ -80,6 +101,16 @@ public partial class Critter : CharacterBody2D
 		}
 	}
 
+	private void FireBullet()
+	{
+		var bulletDirection = (Player.GlobalPosition - GlobalPosition).Normalized();
+		var bullet = BulletScene.Instantiate<CritterBullet>();
+		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
+		bullet.Velocity = bulletDirection * 400.0f;
+		bullet.GlobalRotation = bulletDirection.Angle();
+		AddChildToMain(bullet);
+	}
+
 	private void SetVelocityFromNavigation()
 	{
 		if (!NavigationAgent.IsTargetReachable() || NavigationAgent.IsNavigationFinished())
@@ -103,9 +134,21 @@ public partial class Critter : CharacterBody2D
 			return;
 		}
 
-		SetVelocityFromNavigation();
-		MoveAndSlide();
+		if (NavigationMapReady)
+		{
+			MovementTarget = Player.GlobalTransform.Origin;
+			SetVelocityFromNavigation();
+			MoveAndSlide();
+		}
+
 		PlayAnimation();
+
+		if (_canShoot)
+		{
+			FireBullet();
+			_canShoot = false;
+			this.RunLater(2.0, () => _canShoot = true);
+		}
 	}
 
 	private void Die()

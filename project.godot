@@ -71,6 +71,7 @@ cycle_weapon={
 2d_physics/layer_4="player_attack_hurtbox"
 2d_physics/layer_5="player_physics_hitbox"
 2d_physics/layer_6="enemy_physics_hitbox"
+2d_physics/layer_7="enemy_attack_hurtbox"
 2d_physics/default_gravity=2.08165e-12
 
 [physics]

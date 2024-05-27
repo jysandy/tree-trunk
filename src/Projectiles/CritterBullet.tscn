@@ -1,0 +1,102 @@
+[gd_scene load_steps=14 format=3 uid="uid://c64tuulgdwgfw"]
+
+[ext_resource type="Script" path="res://src/Projectiles/CritterBullet.cs" id="1_1jito"]
+[ext_resource type="Texture2D" uid="uid://dgs7jcsq3uiu6" path="res://assets/tech-dungeon/Projectiles/projectiles-x3.png" id="2_l2vib"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqxdl"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(0, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hy5e3"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(96, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_buk6s"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(192, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5cxaf"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(288, 96, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3mcbp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqxdl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hy5e3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_buk6s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5cxaf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ugosx"]
+size = Vector2(24, 3)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85vhn"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(0, 480, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5b4j2"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(96, 480, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8rlfm"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(192, 480, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2w0r1"]
+atlas = ExtResource("2_l2vib")
+region = Rect2(288, 480, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_68f5t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85vhn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5b4j2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8rlfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2w0r1")
+}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="CritterBullet" type="CharacterBody2D"]
+script = ExtResource("1_1jito")
+BulletType = 1
+BulletType = 1
+metadata/_edit_group_ = true
+
+[node name="BulletAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -1)
+sprite_frames = SubResource("SpriteFrames_3mcbp")
+autoplay = "default"
+frame_progress = 0.456728
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_ugosx")
+
+[node name="CollisionAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(-26, -2)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_68f5t")
+frame = 3
+frame_progress = 1.0
