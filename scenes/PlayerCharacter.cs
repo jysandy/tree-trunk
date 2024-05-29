@@ -26,6 +26,11 @@ public partial class PlayerCharacter : CharacterBody2D
 	[Signal]
 	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
 
+	private void AddChildToMain(Node2D node)
+	{
+		EmitSignal(SignalName.SpawnInMain, node);
+	}
+
 	private void EmitCurrentAmmoChanged()
 	{
 		EmitSignal(SignalName.CurrentAmmoChanged, CurrentWeapon.CurrentAmmo);
@@ -40,7 +45,6 @@ public partial class PlayerCharacter : CharacterBody2D
 	private AnimatedSprite2D PlayerSprite
 	{ get { return GetNode<AnimatedSprite2D>("PlayerSprite"); } }
 
-	// TODO: Attach the animation to the player again
 	private AnimatedSprite2D MeleeAttackSprite
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
@@ -118,7 +122,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	private void PlayAnimation()
+	private void PlayMovementAnimation()
 	{
 		if (IsDead) return;
 
@@ -130,15 +134,6 @@ public partial class PlayerCharacter : CharacterBody2D
 		{
 			PlayIdleAnimation();
 		}
-	}
-
-	private MeleeAttack CreateMeleeAttack(CardinalDirection direction)
-	{
-		var attack = MeleeAttack.Instantiate<MeleeAttack>();
-		attack.GlobalRotationDegrees = direction.RotationDegreesFromRight();
-		attack.GlobalPosition = MeleeAttackSpawnMarker(direction).GlobalPosition;
-
-		return attack;
 	}
 
 	private Marker2D MeleeAttackSpawnMarker(CardinalDirection direction)
@@ -159,15 +154,26 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 	}
 
-	private void StopMeleeAttackAnimation()
+	private MeleeAttack CreateMeleeAttack(CardinalDirection direction)
 	{
-		MeleeAttackSprite.Visible = false;
-		MeleeAttackSprite.Stop();
+		var attack = MeleeAttack.Instantiate<MeleeAttack>();
+		attack.GlobalRotationDegrees = direction.RotationDegreesFromRight();
+		attack.GlobalPosition = MeleeAttackSpawnMarker(direction).GlobalPosition;
+
+		return attack;
 	}
 
-	private void AddChildToMain(Node2D node)
+	private void PlayMeleeAttackAnimation(CardinalDirection direction)
 	{
-		EmitSignal(SignalName.SpawnInMain, node);
+		MeleeAttackSprite.RotationDegrees = direction.RotationDegreesFromRight();
+		MeleeAttackSprite.Position = MeleeAttackSpawnMarker(direction).Position;
+		MeleeAttackSprite.Visible = true;
+		MeleeAttackSprite.Play();
+	}
+
+	private void OnMeleeAttackAnimationFinished()
+	{
+		MeleeAttackSprite.Visible = false;
 	}
 
 	private void TriggerMeleeAttack(CardinalDirection direction)
@@ -181,6 +187,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 		_isMeleeAttacking = true;
 		AddChildToMain(attack);
+		PlayMeleeAttackAnimation(direction);
 
 		this.RunLater(0.2, () =>
 		{
@@ -209,6 +216,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		base._Ready();
 		_currentHealth = MaxHealth;
 		GetNode<Area2D>("HealthHitbox").AreaEntered += OnHealthHitboxAreaEntered;
+		MeleeAttackSprite.AnimationFinished += OnMeleeAttackAnimationFinished;
 
 		_weapons = new RangedWeapon[] { new Pistol(), new Shotgun() };
 
@@ -248,7 +256,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		if (IsDead) return;
 
 		SetVelocityFromInput();
-		PlayAnimation();
+		PlayMovementAnimation();
 		MoveAndSlide();
 
 		if (Input.IsActionPressed("ranged_attack"))
