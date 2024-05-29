@@ -1,14 +1,22 @@
-[gd_scene load_steps=53 format=3 uid="uid://nlyux760ykgh"]
+[gd_scene load_steps=61 format=3 uid="uid://nlyux760ykgh"]
 
 [ext_resource type="Script" path="res://scenes/PlayerCharacter.cs" id="1_qnhp3"]
 [ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
+[ext_resource type="Texture2D" uid="uid://b66ajdxx7f3to" path="res://assets/world-and-dungeon/player/dead/death-01.png" id="2_qrti3"]
 [ext_resource type="Texture2D" uid="uid://c0qiq8tqewg8d" path="res://assets/world-and-dungeon/player/idle/idle-down-02.png" id="2_w7kge"]
+[ext_resource type="Texture2D" uid="uid://bidrfsd6dgndb" path="res://assets/world-and-dungeon/player/dead/death-02.png" id="3_0lh8q"]
 [ext_resource type="Texture2D" uid="uid://b1vw558ihjfwp" path="res://assets/world-and-dungeon/player/idle/idle-down-03.png" id="3_hi5r2"]
+[ext_resource type="Texture2D" uid="uid://dlig3ko8tpwvk" path="res://assets/world-and-dungeon/player/dead/death-03.png" id="4_bvroh"]
 [ext_resource type="Texture2D" uid="uid://jatxead64qdx" path="res://assets/world-and-dungeon/player/idle/idle-down-04.png" id="4_ig2lv"]
+[ext_resource type="Texture2D" uid="uid://b7e7sa4umggtw" path="res://assets/world-and-dungeon/player/dead/death-04.png" id="5_4bcrk"]
 [ext_resource type="Texture2D" uid="uid://ch1p64l3c6nrb" path="res://assets/world-and-dungeon/player/idle/idle-down-05.png" id="5_cyfah"]
 [ext_resource type="Texture2D" uid="uid://wr4milty35fo" path="res://assets/world-and-dungeon/player/idle/idle-down-06.png" id="6_6anxd"]
+[ext_resource type="Texture2D" uid="uid://b7plji5vj2h4v" path="res://assets/world-and-dungeon/player/dead/death-05.png" id="6_13bmd"]
 [ext_resource type="Texture2D" uid="uid://c5mmera684jf7" path="res://assets/world-and-dungeon/player/idle/idle-down-07.png" id="7_ixtfu"]
+[ext_resource type="Texture2D" uid="uid://buaiqmpc0hk33" path="res://assets/world-and-dungeon/player/dead/death-06.png" id="7_m0yon"]
 [ext_resource type="Texture2D" uid="uid://p7liysmxm7dy" path="res://assets/world-and-dungeon/player/idle/idle-down-08.png" id="8_kiwe4"]
+[ext_resource type="Texture2D" uid="uid://batpsu073qis3" path="res://assets/world-and-dungeon/player/dead/death-07.png" id="8_n1cad"]
+[ext_resource type="Texture2D" uid="uid://cevr15ay2eafs" path="res://assets/world-and-dungeon/player/dead/death-08.png" id="9_3el8u"]
 [ext_resource type="Texture2D" uid="uid://bk6cbbxsiduox" path="res://assets/world-and-dungeon/player/idle/idle-down-09.png" id="9_63e0h"]
 [ext_resource type="Texture2D" uid="uid://cv6vllgc8pcr3" path="res://assets/world-and-dungeon/player/idle/idle-side-01.png" id="10_1t4sk"]
 [ext_resource type="Texture2D" uid="uid://c34vq82dxauyo" path="res://assets/world-and-dungeon/player/idle/idle-side-02.png" id="11_80hag"]
@@ -52,6 +60,35 @@
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v1wuj"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qrti3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_0lh8q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bvroh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_4bcrk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_13bmd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_m0yon")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_n1cad")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_3el8u")
+}],
+"loop": false,
+"name": &"death",
+"speed": 14.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_xduoe")
@@ -242,7 +279,9 @@ metadata/_edit_group_ = true
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -11)
 sprite_frames = SubResource("SpriteFrames_v1wuj")
-animation = &"idle-down"
+animation = &"death"
+frame = 7
+frame_progress = 1.0
 
 [node name="IdleShadow" type="Sprite2D" parent="."]
 position = Vector2(0, -11)

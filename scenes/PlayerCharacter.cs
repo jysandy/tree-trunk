@@ -1,11 +1,16 @@
+using System.Diagnostics;
 using Godot;
 using TreeTrunk;
 
-// TODO: Take damage from projectiles and die
 public partial class PlayerCharacter : CharacterBody2D
 {
 	[Export]
 	public float Speed { get; set; } = 300.0f;
+
+	[Export]
+	public float MaxHealth { get; set; } = 300.0f;
+
+	private float _currentHealth;
 
 	public PackedScene MeleeAttack = GD.Load<PackedScene>("res://src/Weapons/Melee/MeleeAttack.tscn");
 
@@ -35,6 +40,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	private AnimatedSprite2D PlayerSprite
 	{ get { return GetNode<AnimatedSprite2D>("PlayerSprite"); } }
 
+	// TODO: Attach the animation to the player again
 	private AnimatedSprite2D MeleeAttackSprite
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
@@ -42,11 +48,16 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private RangedWeapon CurrentWeapon { get { return _weapons[_equippedWeaponIndex]; } }
 
+	private bool IsDead
+	{
+		get { return _currentHealth <= 0; }
+	}
+
 	private bool IsMoving
 	{
 		get
 		{
-			return Velocity.Length() > 0;
+			return !IsDead && Velocity.Length() > 0;
 		}
 	}
 
@@ -109,6 +120,8 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private void PlayAnimation()
 	{
+		if (IsDead) return;
+
 		if (IsMoving)
 		{
 			PlayRunningAnimation();
@@ -159,7 +172,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private void TriggerMeleeAttack(CardinalDirection direction)
 	{
-		if (_isMeleeAttacking)
+		if (_isMeleeAttacking || IsDead)
 		{
 			return;
 		}
@@ -194,6 +207,8 @@ public partial class PlayerCharacter : CharacterBody2D
 	public override void _Ready()
 	{
 		base._Ready();
+		_currentHealth = MaxHealth;
+		GetNode<Area2D>("HealthHitbox").AreaEntered += OnHealthHitboxAreaEntered;
 
 		_weapons = new RangedWeapon[] { new Pistol(), new Shotgun() };
 
@@ -216,6 +231,8 @@ public partial class PlayerCharacter : CharacterBody2D
 	{
 		base._Input(@event);
 
+		if (IsDead) return;
+
 		if (Input.IsActionJustPressed("melee_attack"))
 		{
 			TriggerMeleeAttack(DirectionOfPlayer());
@@ -228,6 +245,8 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (IsDead) return;
+
 		SetVelocityFromInput();
 		PlayAnimation();
 		MoveAndSlide();
@@ -236,5 +255,37 @@ public partial class PlayerCharacter : CharacterBody2D
 		{
 			TriggerRangedAttack();
 		}
+	}
+
+	private void OnHealthHitboxAreaEntered(Area2D area)
+	{
+		var attack = area.GetParent<IAttack>();
+		_currentHealth = Mathf.Clamp(_currentHealth - attack.Damage, 0, MaxHealth);
+
+		if (IsDead)
+		{
+			Die();
+		}
+	}
+
+	private void OnDeathAnimationFinished()
+	{
+		PlayerSprite.Visible = false;
+		PlayerSprite.AnimationFinished -= OnDeathAnimationFinished;
+	}
+
+	private void Die()
+	{
+		GetNode<Sprite2D>("IdleShadow").Visible = false;
+		PlayerSprite.Play("death");
+		PlayerSprite.AnimationFinished += OnDeathAnimationFinished;
+
+		GetNode<CollisionShape2D>("PhysicsHitbox").SetDeferred(
+			CollisionShape2D.PropertyName.Disabled, true
+			);
+		GetNode<CollisionShape2D>("HealthHitbox/CollisionShape2D").SetDeferred(
+			CollisionShape2D.PropertyName.Disabled, true
+		);
+		Debug.WriteLine("YOU DIED");
 	}
 }

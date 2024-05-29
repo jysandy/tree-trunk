@@ -81,6 +81,7 @@ animations = [{
 [node name="CritterBullet" type="CharacterBody2D"]
 script = ExtResource("1_1jito")
 BulletType = 1
+Damage = 70.0
 BulletType = 1
 metadata/_edit_group_ = true
 
