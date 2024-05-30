@@ -5,7 +5,7 @@ namespace TreeTrunk
 {
     public abstract partial class RangedWeapon : Node
     {
-        abstract public Bullet[] TriggerRangedAttack(Vector2 bulletDirection);
+        abstract public void TriggerRangedAttack(Vector2 bulletDirection, Vector2 globalSpawnPosition);
         abstract public int MaxAmmo { get; set; }
 
         // The time delay before reloading starts.

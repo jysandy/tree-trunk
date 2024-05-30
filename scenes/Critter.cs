@@ -16,6 +16,7 @@ public partial class Critter : CharacterBody2D
 	[Signal]
 	public delegate void SpawnInMainEventHandler(Node2D node);
 
+	// TODO: Query the GameManager for this instead
 	public bool NavigationMapReady { get { return GetParent<Main>().NavigationMapReady; } }
 
 	public bool IsDead { get { return _currentHealth <= 0; } }
@@ -52,11 +53,6 @@ public partial class Critter : CharacterBody2D
 				NavigationAgent.TargetPosition = value;
 			}
 		}
-	}
-
-	private void AddChildToMain(Node2D node)
-	{
-		EmitSignal(SignalName.SpawnInMain, node);
 	}
 
 	public override void _Ready()
@@ -108,7 +104,7 @@ public partial class Critter : CharacterBody2D
 		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 		bullet.Velocity = bulletDirection * 400.0f;
 		bullet.GlobalRotation = bulletDirection.Angle();
-		AddChildToMain(bullet);
+		GetNode<GameManager>("/root/GameManager").AddToCurrentScene(bullet);
 	}
 
 	private void SetVelocityFromNavigation()

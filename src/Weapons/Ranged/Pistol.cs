@@ -15,34 +15,36 @@ public partial class Pistol : RangedWeapon
 
 	private bool _canShoot = true;
 
-	private Bullet BuildBullet(Vector2 bulletDirection)
+	private Bullet BuildBullet(Vector2 bulletDirection, Vector2 globalSpawnPosition)
 	{
 		var velocity = bulletDirection * 600.0f;
 		var bullet = BulletScene.Instantiate<Bullet>();
 
 		bullet.Velocity = velocity;
 		bullet.GlobalRotation = velocity.Angle();
+		bullet.GlobalPosition = globalSpawnPosition;
 
 		return bullet;
 	}
 
-	public override Bullet[] TriggerRangedAttack(Vector2 bulletDirection)
+	public override void TriggerRangedAttack(Vector2 bulletDirection, Vector2 globalSpawnPosition)
 	{
 		if (!_canShoot)
 		{
-			return new Bullet[] {};
+			return;
 		}
 		if (CurrentAmmo <= 0)
 		{
-			return new Bullet[] {};
+			return;
 		}
 
 		_canShoot = false;
 		CurrentAmmo -= 1;
 
 		this.RunLater(1 / FireRate, () => _canShoot = true);
-		return new Bullet[] { BuildBullet(bulletDirection) };
 
+		var gameManager = GetNode<GameManager>("/root/GameManager");
+		gameManager.AddToCurrentScene(BuildBullet(bulletDirection, globalSpawnPosition));
 	}
 
 	public override void _Ready()

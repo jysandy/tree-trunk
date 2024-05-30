@@ -4,7 +4,6 @@ public partial class Main : Node2D
 {
 	public bool NavigationMapReady {get; set;} = false;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		GD.Randomize();
@@ -27,10 +26,5 @@ public partial class Main : Node2D
 	private Critter Critter
 	{
 		get { return GetNode<Critter>("Critter"); }
-	}
-
-	private void OnAddChildToMain(Node2D node)
-	{
-		AddChild(node);
 	}
 }

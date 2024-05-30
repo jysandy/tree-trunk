@@ -5,7 +5,7 @@ using TreeTrunk;
 public partial class PlayerCharacter : CharacterBody2D
 {
 	[Export]
-	public float Speed { get; set; } = 300.0f;
+	public float Speed { get; set; } = 200.0f;
 
 	[Export]
 	public float MaxHealth { get; set; } = 300.0f;
@@ -21,15 +21,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	private int _equippedWeaponIndex = 0;
 
 	[Signal]
-	public delegate void SpawnInMainEventHandler(Node2D node);
-
-	[Signal]
 	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
-
-	private void AddChildToMain(Node2D node)
-	{
-		EmitSignal(SignalName.SpawnInMain, node);
-	}
 
 	private void EmitCurrentAmmoChanged()
 	{
@@ -186,7 +178,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		var attack = CreateMeleeAttack(direction);
 
 		_isMeleeAttacking = true;
-		AddChildToMain(attack);
+		GetNode<GameManager>("/root/GameManager").AddToCurrentScene(attack);
 		PlayMeleeAttackAnimation(direction);
 
 		this.RunLater(0.2, () =>
@@ -201,14 +193,9 @@ public partial class PlayerCharacter : CharacterBody2D
 	{
 
 		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
+		var spawnPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 
-		var bullets = CurrentWeapon.TriggerRangedAttack(bulletDirection);
-
-		foreach (Bullet bullet in bullets)
-		{
-			bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
-			AddChildToMain(bullet);
-		}
+		CurrentWeapon.TriggerRangedAttack(bulletDirection, spawnPosition);
 	}
 
 	public override void _Ready()
