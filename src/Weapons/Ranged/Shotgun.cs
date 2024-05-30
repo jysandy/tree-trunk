@@ -8,12 +8,10 @@ public partial class Shotgun : RangedWeapon
     public PackedScene BulletScene = GD.Load<PackedScene>("res://src/Projectiles/ShotgunBullet.tscn");
 
     [Export]
-    public double FireRate { get; set; } = 2.0;
+    public override double FireRate { get; set; } = 2.0;
 
     [Export]
     public override int MaxAmmo { get; set; } = 5;
-
-    private bool _canShoot = true;
 
     private Bullet BuildBullet(Vector2 bulletDirection, Vector2 globalSpawnPosition)
     {
@@ -29,22 +27,8 @@ public partial class Shotgun : RangedWeapon
         return bullet;
     }
 
-    public override void TriggerRangedAttack(Vector2 bulletDirection, Vector2 globalSpawnPosition)
+    protected override void SpawnGunfire(Vector2 bulletDirection, Vector2 globalSpawnPosition)
     {
-        if (!_canShoot)
-        {
-            return;
-        }
-        if (CurrentAmmo <= 0)
-        {
-            return;
-        }
-
-        _canShoot = false;
-        CurrentAmmo -= 1;
-
-        this.RunLater(1 / FireRate, () => _canShoot = true);
-
         var gameManager = GetNode<GameManager>("/root/GameManager");
 
         gameManager.AddToCurrentScene(BuildBullet(bulletDirection, globalSpawnPosition));
@@ -53,11 +37,5 @@ public partial class Shotgun : RangedWeapon
         gameManager.AddToCurrentScene(BuildBullet(bulletDirection, globalSpawnPosition));
         gameManager.AddToCurrentScene(BuildBullet(bulletDirection, globalSpawnPosition));
         gameManager.AddToCurrentScene(BuildBullet(bulletDirection, globalSpawnPosition));
-    }
-
-    public override void _Ready()
-    {
-        base._Ready();
-        CurrentAmmo = MaxAmmo;
     }
 }

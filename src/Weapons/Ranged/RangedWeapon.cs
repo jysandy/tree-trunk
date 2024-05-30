@@ -5,17 +5,19 @@ namespace TreeTrunk
 {
     public abstract partial class RangedWeapon : Node
     {
-        abstract public void TriggerRangedAttack(Vector2 bulletDirection, Vector2 globalSpawnPosition);
+        abstract protected void SpawnGunfire(Vector2 bulletDirection, Vector2 globalSpawnPosition);
         abstract public int MaxAmmo { get; set; }
+        abstract public double FireRate { get; set; }
 
         // The time delay before reloading starts.
-        public float ReloadDelay {get; set; } = 1.5f;
-        
+        public float ReloadDelay { get; set; } = 1.5f;
+
         // The time taken between ammo ticking up during reload.
-        public float ReloadInterval {get; set;} = 0.5f;
+        public float ReloadInterval { get; set; } = 0.5f;
 
         private int _currentAmmoValue;
         private Timer _reloadTimer;
+        private bool _canShoot = true;
 
         public bool IsAmmoFull { get { return CurrentAmmo == MaxAmmo; } }
 
@@ -44,6 +46,7 @@ namespace TreeTrunk
         public override void _Ready()
         {
             base._Ready();
+            CurrentAmmo = MaxAmmo;
             _reloadTimer = new Timer
             {
                 Autostart = false,
@@ -63,6 +66,25 @@ namespace TreeTrunk
 
             CurrentAmmo += 1;
             _reloadTimer.Start(ReloadInterval);
+        }
+
+        public void TriggerRangedAttack(Vector2 bulletDirection, Vector2 globalSpawnPosition)
+        {
+            if (!_canShoot)
+            {
+                return;
+            }
+            if (CurrentAmmo <= 0)
+            {
+                return;
+            }
+
+            _canShoot = false;
+            CurrentAmmo -= 1;
+
+            this.RunLater(1 / FireRate, () => _canShoot = true);
+
+            SpawnGunfire(bulletDirection, globalSpawnPosition);
         }
 
         [Signal]
