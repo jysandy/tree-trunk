@@ -18,6 +18,11 @@ public partial class Bullet : CharacterBody2D, IAttack
 	[Export]
 	public virtual BulletTypeEnum BulletType {get; set;} = BulletTypeEnum.PlayerFired;
 
+	[Export]
+	public virtual float MaxRange { get; set; } = 130;
+
+	private Vector2 _startingGlobalPosition;
+
 	// Returns the Shape2D assigned to the CollisionPolygon2D or CollisionShape2D
 	// child of this node.
 	private Shape2D GetShape2DFromChildren()
@@ -64,6 +69,8 @@ public partial class Bullet : CharacterBody2D, IAttack
 		SetCollisionMaskValue(1, true); // walls
 		ZIndex = 1;
 		YSortEnabled = true;
+
+		_startingGlobalPosition = GlobalPosition;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -75,6 +82,11 @@ public partial class Bullet : CharacterBody2D, IAttack
 		if (collision != null)
 		{
 			OnBulletCollided();
+		}
+
+		if ((GlobalPosition - _startingGlobalPosition).Length() >= MaxRange)
+		{
+			QueueFree();
 		}
 	}
 	private void OnBulletHurtboxAreaEntered(Area2D area)

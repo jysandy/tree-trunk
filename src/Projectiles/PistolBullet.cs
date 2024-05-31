@@ -1,8 +1,9 @@
 using Godot;
-using System;
 
 public partial class PistolBullet : Bullet
 {
+	public override float MaxRange { get; set; } = 500;
+
 	private AnimatedSprite2D BulletAnimation
 	{
 		get { return GetNode<AnimatedSprite2D>("BulletAnimation"); }

@@ -5,6 +5,9 @@ public partial class CritterBullet : Bullet
 	[Export]
 	public override BulletTypeEnum BulletType {get; set;} = BulletTypeEnum.EnemyFired;
 
+	[Export]
+	public override float MaxRange {get; set;} = 500;
+
 	private AnimatedSprite2D BulletAnimation
 	{
 		get { return GetNode<AnimatedSprite2D>("BulletAnimation"); }
