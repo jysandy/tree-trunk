@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using Godot;
 using TreeTrunk;
 
@@ -8,6 +10,9 @@ public partial class Critter : CharacterBody2D
 
 	[Export]
 	public float MaxHealth = 200.0f;
+
+	[Export]
+	public float PreferredDistanceFromPlayer = 100.0f;
 
 	private float _currentHealth = 0.0f;
 
@@ -25,6 +30,7 @@ public partial class Critter : CharacterBody2D
 
 	private PlayerCharacter Player
 	{
+		// TODO: Get this via the GameManager
 		get { return GetParent<Main>().Player; }
 	}
 
@@ -121,6 +127,32 @@ public partial class Critter : CharacterBody2D
 		Velocity = currentAgentPosition.DirectionTo(nextPathPosition) * Speed;
 	}
 
+	private void StopMoving()
+	{
+		Velocity = Vector2.Zero;
+	}
+
+	private void ChasePlayer()
+	{
+		MovementTarget = Player.GlobalPosition;
+		SetVelocityFromNavigation();
+		MoveAndSlide();
+	}
+
+	private void KitePlayer()
+	{
+		// Back up from the player until we're at the desired distance.
+		MovementTarget = GlobalPosition + (GlobalPosition - Player.GlobalPosition).Normalized()
+			* PreferredDistanceFromPlayer;
+		SetVelocityFromNavigation();
+		MoveAndSlide();
+	}
+
+	private float DistanceToPlayer()
+	{
+		return (Player.GlobalPosition - GlobalPosition).Length();
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
@@ -132,9 +164,18 @@ public partial class Critter : CharacterBody2D
 
 		if (NavigationMapReady)
 		{
-			MovementTarget = Player.GlobalTransform.Origin;
-			SetVelocityFromNavigation();
-			MoveAndSlide();
+			if (Mathf.IsEqualApprox(DistanceToPlayer(), PreferredDistanceFromPlayer, 10))
+			{
+				StopMoving();
+			}
+			else if (DistanceToPlayer() > PreferredDistanceFromPlayer)
+			{
+				ChasePlayer();
+			}
+			else if (DistanceToPlayer() < PreferredDistanceFromPlayer)
+			{
+				KitePlayer();
+			}
 		}
 
 		PlayAnimation();
