@@ -101,10 +101,13 @@ height = 16.0
 height = 34.0
 
 [node name="Critter" type="CharacterBody2D"]
+z_index = 1
+y_sort_enabled = true
 collision_layer = 32
-collision_mask = 17
+collision_mask = 49
 motion_mode = 1
 script = ExtResource("1_ddtl1")
+Speed = 50.0
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

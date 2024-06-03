@@ -48,20 +48,23 @@ navigation_polygon = SubResource("NavigationPolygon_kbd6h")
 visible = false
 navigation_polygon = SubResource("NavigationPolygon_gsdcx")
 
-[node name="Critter" parent="Main" instance=ExtResource("4_qowyr")]
-z_index = 1
-y_sort_enabled = true
-position = Vector2(1235, -145)
-Speed = 50.0
-MaxHealth = 10000.0
-
 [node name="PlayerCharacter" parent="Main" instance=ExtResource("5_r2g5u")]
-position = Vector2(1152, 98)
+position = Vector2(1112, 406)
 scale = Vector2(0.8, 0.8)
 MaxHealth = 30000.0
 
 [node name="Camera2D" type="Camera2D" parent="Main/PlayerCharacter"]
 zoom = Vector2(3, 3)
+
+[node name="Critter" parent="Main" instance=ExtResource("4_qowyr")]
+position = Vector2(1235, 529)
+MaxHealth = 10000.0
+
+[node name="Critter2" parent="Main" instance=ExtResource("4_qowyr")]
+position = Vector2(843, 435)
+
+[node name="Critter3" parent="Main" instance=ExtResource("4_qowyr")]
+position = Vector2(1227, 238)
 
 [node name="HUD" parent="." instance=ExtResource("6_6wgv6")]
 script = ExtResource("7_fhbil")
