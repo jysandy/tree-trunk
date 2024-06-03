@@ -41,7 +41,10 @@ public partial class PlayerCharacter : CharacterBody2D
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
 	public Area2D HealthHitbox
-	{ get {return GetNode<Area2D>("HealthHitbox"); }}
+	{ get { return GetNode<Area2D>("HealthHitbox"); } }
+
+	public Marker2D CentreOfMass
+	{ get { return GetNode<Marker2D>("CentreOfMass"); } }
 
 	private Marker2D RangedAttackSpawn { get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
 

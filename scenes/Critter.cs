@@ -105,7 +105,7 @@ public partial class Critter : CharacterBody2D
 
 	private void FireBullet()
 	{
-		var bulletDirection = (Player.GlobalPosition - GlobalPosition).Normalized();
+		var bulletDirection = (Player.CentreOfMass.GlobalPosition - RangedAttackSpawn.GlobalPosition).Normalized();
 		var bullet = BulletScene.Instantiate<CritterBullet>();
 		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 		bullet.Velocity = bulletDirection * 400.0f;
@@ -201,7 +201,7 @@ public partial class Critter : CharacterBody2D
 		var spaceState = GetWorld2D().DirectSpaceState;
 
 		var query = PhysicsRayQueryParameters2D.Create(RangedAttackSpawn.GlobalPosition,
-			Player.GlobalPosition,
+			Player.CentreOfMass.GlobalPosition,
 			collisionMask);
 		query.CollideWithAreas = true;
 
