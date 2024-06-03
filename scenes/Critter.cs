@@ -162,9 +162,15 @@ public partial class Critter : CharacterBody2D
 			return;
 		}
 
+		bool playerVisible = PlayerIsInLOS();
+
 		if (NavigationMapReady)
 		{
-			if (Mathf.IsEqualApprox(DistanceToPlayer(), PreferredDistanceFromPlayer, 10))
+			if (!playerVisible)
+			{
+				ChasePlayer();
+			}
+			else if (Mathf.IsEqualApprox(DistanceToPlayer(), PreferredDistanceFromPlayer, 10))
 			{
 				StopMoving();
 			}
@@ -180,7 +186,7 @@ public partial class Critter : CharacterBody2D
 
 		PlayAnimation();
 
-		if (_canShoot && PlayerIsInLOS())
+		if (_canShoot && playerVisible)
 		{
 			FireBullet();
 			_canShoot = false;
@@ -201,7 +207,7 @@ public partial class Critter : CharacterBody2D
 
 		var result = spaceState.IntersectRay(query);
 
-		return result.Count > 0 && 
+		return result.Count > 0 &&
 			(ulong)result["collider_id"] == Player.HealthHitbox.GetInstanceId();
 	}
 
