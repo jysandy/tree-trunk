@@ -180,12 +180,29 @@ public partial class Critter : CharacterBody2D
 
 		PlayAnimation();
 
-		if (_canShoot)
+		if (_canShoot && PlayerIsInLOS())
 		{
 			FireBullet();
 			_canShoot = false;
 			this.RunLater(2.0, () => _canShoot = true);
 		}
+	}
+
+	// Can only be called in PhysicsProcess
+	private bool PlayerIsInLOS()
+	{
+		uint collisionMask = 0b101; // player_hitbox and wall_collisions
+		var spaceState = GetWorld2D().DirectSpaceState;
+
+		var query = PhysicsRayQueryParameters2D.Create(RangedAttackSpawn.GlobalPosition,
+			Player.GlobalPosition,
+			collisionMask);
+		query.CollideWithAreas = true;
+
+		var result = spaceState.IntersectRay(query);
+
+		return result.Count > 0 && 
+			(ulong)result["collider_id"] == Player.HealthHitbox.GetInstanceId();
 	}
 
 	private void Die()

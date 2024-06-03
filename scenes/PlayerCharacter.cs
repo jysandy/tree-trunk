@@ -40,6 +40,9 @@ public partial class PlayerCharacter : CharacterBody2D
 	private AnimatedSprite2D MeleeAttackSprite
 	{ get { return GetNode<AnimatedSprite2D>("MeleeAttackSprite"); } }
 
+	public Area2D HealthHitbox
+	{ get {return GetNode<Area2D>("HealthHitbox"); }}
+
 	private Marker2D RangedAttackSpawn { get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
 
 	private RangedWeapon CurrentWeapon { get { return _weapons[_equippedWeaponIndex]; } }
