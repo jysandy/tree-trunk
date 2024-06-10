@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics;
+using System.Threading.Tasks;
 using Godot;
 using TreeTrunk;
 
@@ -66,6 +65,7 @@ public partial class Critter : CharacterBody2D
 		base._Ready();
 
 		_currentHealth = MaxHealth;
+		NavigationAgent.VelocityComputed += OnSafeVelocityComputed;
 		PlayAnimation();
 	}
 
@@ -125,18 +125,22 @@ public partial class Critter : CharacterBody2D
 		Vector2 nextPathPosition = NavigationAgent.GetNextPathPosition();
 
 		Velocity = currentAgentPosition.DirectionTo(nextPathPosition) * Speed;
+		if (NavigationAgent.AvoidanceEnabled)
+		{
+			NavigationAgent.Velocity = Velocity;
+		}
 	}
 
 	private void StopMoving()
 	{
 		Velocity = Vector2.Zero;
+		NavigationAgent.Velocity = Vector2.Zero;
 	}
 
 	private void ChasePlayer()
 	{
 		MovementTarget = Player.GlobalPosition;
 		SetVelocityFromNavigation();
-		MoveAndSlide();
 	}
 
 	private void KitePlayer()
@@ -145,12 +149,17 @@ public partial class Critter : CharacterBody2D
 		MovementTarget = GlobalPosition + (GlobalPosition - Player.GlobalPosition).Normalized()
 			* PreferredDistanceFromPlayer;
 		SetVelocityFromNavigation();
-		MoveAndSlide();
 	}
 
 	private float DistanceToPlayer()
 	{
 		return (Player.GlobalPosition - GlobalPosition).Length();
+	}
+
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+		PlayAnimation();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -170,7 +179,7 @@ public partial class Critter : CharacterBody2D
 			{
 				ChasePlayer();
 			}
-			else if (Mathf.IsEqualApprox(DistanceToPlayer(), PreferredDistanceFromPlayer, 10))
+			else if (Mathf.IsEqualApprox(DistanceToPlayer(), PreferredDistanceFromPlayer, 20))
 			{
 				StopMoving();
 			}
@@ -184,14 +193,37 @@ public partial class Critter : CharacterBody2D
 			}
 		}
 
-		PlayAnimation();
-
 		if (_canShoot && playerVisible)
 		{
 			FireBullet();
 			_canShoot = false;
 			this.RunLater(2.0, () => _canShoot = true);
 		}
+
+		if (NavigationAgent.AvoidanceEnabled)
+		{
+			// Do nothing since OnSafeVelocityComputed will be called.
+		}
+		else
+		{
+			MoveAndSlide();
+		}
+	}
+
+	// Called by NavigationAgent at the end of the physics frame.
+	private void OnSafeVelocityComputed(Vector2 safeVelocity)
+	{
+		Velocity = safeVelocity;
+		MoveAndSlide();
+	}
+
+	private async Task<Vector2> GetSafeVelocity()
+	{
+		// Probably more expensive than just connecting to the signal once, 
+		// but it's easier to follow control flow this way
+		var signalArgs = await ToSignal(NavigationAgent, NavigationAgent2D.SignalName.VelocityComputed);
+		Vector2 safeVelocity = (Vector2)signalArgs[0];
+		return safeVelocity;
 	}
 
 	// Can only be called in PhysicsProcess
@@ -213,6 +245,9 @@ public partial class Critter : CharacterBody2D
 
 	private void Die()
 	{
+		Velocity = Vector2.Zero;
+		NavigationAgent.AvoidanceEnabled = false;
+		NavigationAgent.Velocity = Vector2.Zero;
 		CritterSprite.Play("dead-right");
 		GetNode<CollisionShape2D>("PhysicsHitbox").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 		GetNode<CollisionShape2D>("HealthHitbox/CollisionShape2D").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);

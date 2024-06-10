@@ -108,6 +108,7 @@ collision_mask = 49
 motion_mode = 1
 script = ExtResource("1_ddtl1")
 Speed = 50.0
+PreferredDistanceFromPlayer = 130.0
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -123,6 +124,10 @@ position = Vector2(2, -12)
 texture = ExtResource("12_uk5bn")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+radius = 50.0
+max_speed = 50.0
+avoidance_mask = 3
 
 [node name="HealthHitbox" type="Area2D" parent="."]
 collision_layer = 2

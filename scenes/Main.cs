@@ -22,9 +22,4 @@ public partial class Main : Node2D
 	{
 		get { return GetNode<PlayerCharacter>("PlayerCharacter"); }
 	}
-
-	private Critter Critter
-	{
-		get { return GetNode<Critter>("Critter"); }
-	}
 }
