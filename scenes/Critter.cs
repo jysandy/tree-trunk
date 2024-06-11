@@ -27,6 +27,8 @@ public partial class Critter : CharacterBody2D
 
 	public PackedScene BulletScene = GD.Load<PackedScene>("res://src/Projectiles/CritterBullet.tscn");
 
+	public GameManager GameManager { get { return GetNode<GameManager>("/root/GameManager"); } }
+
 	private PlayerCharacter Player
 	{
 		// TODO: Get this via the GameManager
@@ -229,7 +231,7 @@ public partial class Critter : CharacterBody2D
 	// Can only be called in PhysicsProcess
 	private bool PlayerIsInLOS()
 	{
-		uint collisionMask = 0b101; // player_hitbox and wall_collisions
+		uint collisionMask = GameManager.BuildPhysicsLayerMask(new string[]{"player_hitbox", "wall_collisions"});
 		var spaceState = GetWorld2D().DirectSpaceState;
 
 		var query = PhysicsRayQueryParameters2D.Create(RangedAttackSpawn.GlobalPosition,

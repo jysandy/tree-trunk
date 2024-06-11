@@ -4,6 +4,8 @@ using TreeTrunk;
 // Attach this script to any Bullet.
 public partial class Bullet : CharacterBody2D, IAttack
 {
+	public GameManager GameManager { get { return GetNode<GameManager>("/root/GameManager"); } }
+
 	public enum BulletTypeEnum
 	{
 		PlayerFired,
@@ -16,7 +18,7 @@ public partial class Bullet : CharacterBody2D, IAttack
 	// Who fired the bullet.
 	// Affects the entities that the bullet detects collisions with.
 	[Export]
-	public virtual BulletTypeEnum BulletType {get; set;} = BulletTypeEnum.PlayerFired;
+	public virtual BulletTypeEnum BulletType { get; set; } = BulletTypeEnum.PlayerFired;
 
 	[Export]
 	public virtual float MaxRange { get; set; } = 130;
@@ -44,18 +46,16 @@ public partial class Bullet : CharacterBody2D, IAttack
 			Shape = GetShape2DFromChildren()
 		};
 		bulletHurtbox.AddChild(hurtboxCollisionShape);
-		bulletHurtbox.CollisionLayer = 0;
-		bulletHurtbox.CollisionMask = 0;
 
 		if (BulletType == BulletTypeEnum.PlayerFired)
 		{
-			bulletHurtbox.SetCollisionLayerValue(4, true); // player_attack_hurtbox
-			bulletHurtbox.SetCollisionMaskValue(2, true); // enemy_hitboxes
+			bulletHurtbox.CollisionLayer = GameManager.BuildPhysicsLayerMask("player_attack_hurtbox");
+			bulletHurtbox.CollisionMask = GameManager.BuildPhysicsLayerMask("enemy_hitboxes");
 		}
 		else if (BulletType == BulletTypeEnum.EnemyFired)
 		{
-			bulletHurtbox.SetCollisionLayerValue(7, true); // enemy_attack_hurtbox
-			bulletHurtbox.SetCollisionMaskValue(3, true); // player_hitbox
+			bulletHurtbox.CollisionLayer = GameManager.BuildPhysicsLayerMask("enemy_attack_hurtbox");
+			bulletHurtbox.CollisionMask = GameManager.BuildPhysicsLayerMask("player_hitbox");
 		}
 
 		bulletHurtbox.AreaEntered += OnBulletHurtboxAreaEntered;
@@ -65,8 +65,7 @@ public partial class Bullet : CharacterBody2D, IAttack
 		// So that we don't have to set these in the editor
 		MotionMode = MotionModeEnum.Floating;
 		CollisionLayer = 0;
-		CollisionMask = 0;
-		SetCollisionMaskValue(1, true); // walls
+		CollisionMask = GameManager.BuildPhysicsLayerMask("wall_collisions");
 		ZIndex = 1;
 		YSortEnabled = true;
 
