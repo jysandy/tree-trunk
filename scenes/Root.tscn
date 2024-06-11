@@ -44,7 +44,6 @@ layer_5/tile_data = PackedInt32Array(720937, 1, 0, 589860, 1114113, 0, 655381, 6
 [node name="PlayerCharacter" parent="Main" instance=ExtResource("5_r2g5u")]
 position = Vector2(1112, 406)
 scale = Vector2(0.8, 0.8)
-MaxHealth = 30000.0
 
 [node name="Camera2D" type="Camera2D" parent="Main/PlayerCharacter"]
 zoom = Vector2(3, 3)
@@ -64,5 +63,3 @@ navigation_polygon = SubResource("NavigationPolygon_itim4")
 
 [node name="HUD" parent="." instance=ExtResource("6_6wgv6")]
 script = ExtResource("7_fhbil")
-
-[connection signal="CurrentAmmoChanged" from="Main/PlayerCharacter" to="HUD" method="OnPlayerCharacterCurrentAmmoChanged"]

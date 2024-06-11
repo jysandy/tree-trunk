@@ -4,7 +4,7 @@ using Godot;
 public partial class Root : Node
 {
 	public Node CurrentScene { get; set; }
-	public CanvasLayer HUD { get { return GetNode<CanvasLayer>("HUD"); } }
+	public HUD HUD { get { return GetNode<HUD>("HUD"); } }
 
 	public override void _Ready()
 	{

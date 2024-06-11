@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using TreeTrunk;
 
 public partial class GameManager : Node
 {
@@ -10,6 +11,10 @@ public partial class GameManager : Node
     // Physics layer names mapped to layer numbers
     private Dictionary<string, int> _physicsLayers = new Dictionary<string, int>();
 
+    private PlayerState _playerState;
+
+    public PlayerState PlayerState { get { return _playerState; } }
+
     public void AddToCurrentScene(Node node)
     {
         CurrentScene.AddChild(node);
@@ -18,6 +23,10 @@ public partial class GameManager : Node
     public override void _Ready()
     {
         base._Ready();
+        _playerState = new PlayerState();
+        AddChild(_playerState);
+
+        PlayerState.CurrentAmmoChanged += RootNode.HUD.OnPlayerCharacterCurrentAmmoChanged;
 
         for (int i = 1; i <= 32; i++)
         {
