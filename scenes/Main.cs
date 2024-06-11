@@ -1,4 +1,5 @@
 using Godot;
+using System.Threading.Tasks;
 
 public partial class Main : Node2D, TreeTrunk.ILevelRoot
 {
@@ -11,7 +12,7 @@ public partial class Main : Node2D, TreeTrunk.ILevelRoot
 		Callable.From(WaitForNavigationMap).CallDeferred();
 	}
 
-	private async void WaitForNavigationMap()
+	private async Task WaitForNavigationMap()
 	{
 		// Wait for the first physics frame so the NavigationServer can sync.
 		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);

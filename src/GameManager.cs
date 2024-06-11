@@ -15,6 +15,12 @@ public partial class GameManager : Node
 
     public PlayerState PlayerState { get { return _playerState; } }
 
+    public PlayerCharacter Player
+    { get { return ((ILevelRoot)CurrentScene).Player; } }
+
+    public bool NavigationMapReady
+    { get { return ((ILevelRoot)CurrentScene).NavigationMapReady; } }
+
     public void AddToCurrentScene(Node node)
     {
         CurrentScene.AddChild(node);

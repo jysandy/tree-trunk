@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Godot;
 using TreeTrunk;
 
@@ -17,11 +16,7 @@ public partial class Critter : CharacterBody2D
 
 	private bool _canShoot = true;
 
-	[Signal]
-	public delegate void SpawnInMainEventHandler(Node2D node);
-
-	// TODO: Query the GameManager for this instead
-	public bool NavigationMapReady { get { return GetParent<Main>().NavigationMapReady; } }
+	public bool NavigationMapReady { get { return GameManager.NavigationMapReady; } }
 
 	public bool IsDead { get { return _currentHealth <= 0; } }
 
@@ -31,8 +26,7 @@ public partial class Critter : CharacterBody2D
 
 	private PlayerCharacter Player
 	{
-		// TODO: Get this via the GameManager
-		get { return GetParent<Main>().Player; }
+		get { return GameManager.Player; }
 	}
 
 	private NavigationAgent2D NavigationAgent
@@ -112,7 +106,7 @@ public partial class Critter : CharacterBody2D
 		bullet.GlobalPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 		bullet.Velocity = bulletDirection * 400.0f;
 		bullet.GlobalRotation = bulletDirection.Angle();
-		GetNode<GameManager>("/root/GameManager").AddToCurrentScene(bullet);
+		GameManager.AddToCurrentScene(bullet);
 	}
 
 	private void SetVelocityFromNavigation()
@@ -217,15 +211,6 @@ public partial class Critter : CharacterBody2D
 	{
 		Velocity = safeVelocity;
 		MoveAndSlide();
-	}
-
-	private async Task<Vector2> GetSafeVelocity()
-	{
-		// Probably more expensive than just connecting to the signal once, 
-		// but it's easier to follow control flow this way
-		var signalArgs = await ToSignal(NavigationAgent, NavigationAgent2D.SignalName.VelocityComputed);
-		Vector2 safeVelocity = (Vector2)signalArgs[0];
-		return safeVelocity;
 	}
 
 	// Can only be called in PhysicsProcess
