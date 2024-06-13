@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://cmgtyn81rsrbv"]
+
+[ext_resource type="Shader" path="res://src/Projectiles/RailgunLaser/RailgunLaser.gdshader" id="1_tqfmg"]
+[ext_resource type="Script" path="res://src/Projectiles/RailgunLaser/RailgunLaser.cs" id="1_wrtkl"]
+[ext_resource type="Shader" path="res://src/Projectiles/RailgunLaser/LaserBase.gdshader" id="3_6d3ao"]
+[ext_resource type="Script" path="res://src/Projectiles/RailgunLaser/LaserBase.cs" id="3_e74vg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vdml1"]
+shader = ExtResource("1_tqfmg")
+shader_parameter/beam_width = null
+shader_parameter/beam_color = null
+shader_parameter/alpha_mul_min = null
+shader_parameter/flicker_frequency = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_81b8h"]
+size = Vector2(100, 5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nvbft"]
+shader = ExtResource("3_6d3ao")
+shader_parameter/color = null
+shader_parameter/radius = null
+shader_parameter/alpha_mul_min = null
+shader_parameter/flicker_frequency = null
+
+[node name="RailgunLaser" type="Node2D"]
+z_index = 1
+material = SubResource("ShaderMaterial_vdml1")
+script = ExtResource("1_wrtkl")
+metadata/_edit_group_ = true
+
+[node name="LaserHurtbox" type="Area2D" parent="."]
+position = Vector2(50, 2.08165e-12)
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaserHurtbox"]
+shape = SubResource("RectangleShape2D_81b8h")
+disabled = true
+
+[node name="LaserBase" type="Node2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_nvbft")
+script = ExtResource("3_e74vg")

@@ -7,6 +7,18 @@ public partial class RailgunLaser : Node2D, IAttack
 	public float MaxLength { get; set; } = 300.0f;
 
 	[Export]
+	public float BeamVisualWidth { get; set; } = 10.0f;
+
+	[Export]
+	public Color BeamColor { get; set; } = Colors.Green;
+
+	[Export]
+	public float AlphaMulMin { get; set; } = 0.5f;
+
+	[Export]
+	public float FlickerFrequency { get; set; } = 30;
+
+	[Export]
 	public float Damage { get; set; } = 150.0f;
 
 	private bool _lengthSet = false;
@@ -14,6 +26,17 @@ public partial class RailgunLaser : Node2D, IAttack
 	private float _length = 0.0f;
 
 	private GameManager GameManager { get { return GetNode<GameManager>("/root/GameManager"); } }
+	private LaserBase LaserBase { get { return GetNode<LaserBase>("LaserBase"); } }
+	private CollisionShape2D CollisionShape { get { return GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D"); } }
+
+	public override void _Ready()
+	{
+		base._Ready();
+		LaserBase.Color = BeamColor;
+		LaserBase.Radius = (BeamVisualWidth / 2.0f) * 2.5f;
+		LaserBase.AlphaMulMin = AlphaMulMin;
+		LaserBase.FlickerFrequency = FlickerFrequency;
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -54,11 +77,12 @@ public partial class RailgunLaser : Node2D, IAttack
 			Size = new Vector2(length, 5)
 		};
 
-		GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D").Shape = newShape;
+		CollisionShape.Shape = newShape;
 		GetNode<Area2D>("LaserHurtbox").Position = new Vector2((float)length / 2, 0);
-		GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D").SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
+		CollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
 		_length = length;
 		_lengthSet = true;
+		LaserBase.Visible = true;
 		QueueRedraw();
 	}
 
@@ -66,9 +90,21 @@ public partial class RailgunLaser : Node2D, IAttack
 	{
 		base._Draw();
 		if (_lengthSet == false) return;
-		DrawLine(new Vector2(0, 0), 
-				 new Vector2(1, 0) * _length,
-				 Colors.Green,
-				 5.0f);
+
+		var shader = (ShaderMaterial)Material;
+		shader.SetShaderParameter("beam_width", BeamVisualWidth);
+		shader.SetShaderParameter("beam_color", BeamColor);
+		shader.SetShaderParameter("alpha_mul_min", AlphaMulMin);
+		shader.SetShaderParameter("flicker_frequency", FlickerFrequency);
+
+		DrawRect(new Rect2(new Vector2(0, -(BeamVisualWidth / 2)),
+						   new Vector2(_length, BeamVisualWidth)),
+				 Colors.Green);
+	}
+
+	public void BeginExitAnimation()
+	{
+		CollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
+		this.RunLater(0.3, QueueFree);
 	}
 }
