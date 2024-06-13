@@ -51,7 +51,7 @@ namespace TreeTrunk
         {
             base._Ready();
             _currentHealth = MaxHealth;
-            _weapons = new RangedWeapon[] { new Pistol(), new Shotgun() };
+            _weapons = new RangedWeapon[] { new Railgun(), new Shotgun() };
             foreach (var weapon in _weapons)
             {
                 AddChild(weapon);

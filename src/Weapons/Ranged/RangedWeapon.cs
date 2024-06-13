@@ -10,10 +10,10 @@ namespace TreeTrunk
         abstract public double FireRate { get; set; }
 
         // The time delay before reloading starts.
-        public float ReloadDelay { get; set; } = 1.5f;
+        public virtual float ReloadDelay { get; set; } = 1.5f;
 
         // The time taken between ammo ticking up during reload.
-        public float ReloadInterval { get; set; } = 0.5f;
+        public virtual float ReloadInterval { get; set; } = 0.5f;
 
         private int _currentAmmoValue;
         private Timer _reloadTimer;
