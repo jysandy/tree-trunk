@@ -26,7 +26,7 @@ namespace TreeTrunk
 
 			var laser = BuildLaser(bulletDirection, globalSpawnPosition);
 			gameManager.AddToCurrentScene(laser);
-			this.RunLater(0.1, () => laser.BeginExitAnimation());
+			this.RunLater(0.1, laser.RemoveHitboxAndFadeout);
 		}
 	}
 }

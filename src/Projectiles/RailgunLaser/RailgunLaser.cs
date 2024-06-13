@@ -10,6 +10,9 @@ public partial class RailgunLaser : Node2D, IAttack
 	public float BeamVisualWidth { get; set; } = 10.0f;
 
 	[Export]
+	public float HurtboxWidth { get; set; } = 5.0f;
+
+	[Export]
 	public Color BeamColor { get; set; } = Colors.Green;
 
 	[Export]
@@ -25,6 +28,11 @@ public partial class RailgunLaser : Node2D, IAttack
 
 	private float _length = 0.0f;
 
+	private bool _fadingOut = false;
+
+	[Export]
+	public float FadeoutRate { get; set; } = 33.3333f;
+
 	private GameManager GameManager { get { return GetNode<GameManager>("/root/GameManager"); } }
 	private LaserBase LaserBase { get { return GetNode<LaserBase>("LaserBase"); } }
 	private CollisionShape2D CollisionShape { get { return GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D"); } }
@@ -36,6 +44,8 @@ public partial class RailgunLaser : Node2D, IAttack
 		LaserBase.Radius = (BeamVisualWidth / 2.0f) * 2.5f;
 		LaserBase.AlphaMulMin = AlphaMulMin;
 		LaserBase.FlickerFrequency = FlickerFrequency;
+		LaserBase.FadeoutRate = FadeoutRate;
+		LaserBase.FadeoutFinished += OnLaserBaseFadeoutFinished;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -46,7 +56,7 @@ public partial class RailgunLaser : Node2D, IAttack
 
 		// TODO: make this a shape collision test?
 		uint collisionMask = GameManager.BuildPhysicsLayerMask("wall_collisions");
-		var raycastEnd = GlobalPosition + new Vector2(1, 0).Rotated(GlobalRotation).Normalized() * MaxLength;
+		var raycastEnd = GlobalPosition + new Vector2(1, 0).Rotated(GlobalRotation) * MaxLength;
 		var query = PhysicsRayQueryParameters2D.Create(
 			GlobalPosition,
 			raycastEnd,
@@ -74,7 +84,7 @@ public partial class RailgunLaser : Node2D, IAttack
 	{
 		var newShape = new RectangleShape2D
 		{
-			Size = new Vector2(length, 5)
+			Size = new Vector2(length, HurtboxWidth)
 		};
 
 		CollisionShape.Shape = newShape;
@@ -102,9 +112,39 @@ public partial class RailgunLaser : Node2D, IAttack
 				 Colors.Green);
 	}
 
-	public void BeginExitAnimation()
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+		if (_fadingOut)
+		{
+			BeamVisualWidth -= FadeoutRate * (float)delta;
+			if (BeamVisualWidth <= 0)
+			{
+				BeamVisualWidth = 0;
+			}
+			else
+			{
+				QueueRedraw();
+			}
+		}
+	}
+
+	public void RemoveHitboxAndFadeout()
 	{
 		CollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, false);
-		this.RunLater(0.3, QueueFree);
+		this.RunLater(0.1, BeginFadeout);
+	}
+
+	private void BeginFadeout()
+	{
+		_fadingOut = true;
+		LaserBase.BeginFadeout();
+	}
+
+	public void OnLaserBaseFadeoutFinished()
+	{
+		// The base should fade out after the ray,
+		// since the base is wider.
+		QueueFree();
 	}
 }
