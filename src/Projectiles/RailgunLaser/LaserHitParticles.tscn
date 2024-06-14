@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc1kqk1aq02la"]
+
+[ext_resource type="Texture2D" uid="uid://kkxjt0id6273" path="res://assets/pixel-effects/115_3.png" id="1_5rxt0"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k3tai"]
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_acdk1"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 10.0
+spread = 180.0
+anim_speed_min = 2.0
+anim_speed_max = 2.0
+
+[node name="LaserHitParticles" type="GPUParticles2D"]
+material = SubResource("CanvasItemMaterial_k3tai")
+amount = 3
+process_material = SubResource("ParticleProcessMaterial_acdk1")
+texture = ExtResource("1_5rxt0")
+explosiveness = 0.8

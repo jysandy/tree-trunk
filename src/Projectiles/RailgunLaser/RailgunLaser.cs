@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using TreeTrunk;
 
@@ -37,6 +39,8 @@ public partial class RailgunLaser : Node2D, IAttack
 	private LaserBase LaserBase { get { return GetNode<LaserBase>("LaserBase"); } }
 	private CollisionShape2D CollisionShape { get { return GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D"); } }
 
+	private PackedScene LaserHitParticlesScene {get; set; } = GD.Load<PackedScene>("res://src/Projectiles/RailgunLaser/LaserHitParticles.tscn");
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -52,32 +56,94 @@ public partial class RailgunLaser : Node2D, IAttack
 	{
 		base._PhysicsProcess(delta);
 		if (_lengthSet) return;
+		var laserStartPoint = GlobalPosition;
+		var laserEndPoint = laserStartPoint + new Vector2(1, 0).Rotated(GlobalRotation) * MaxLength;
 
+		// Collide with walls and adjust the end point.
+		var wallCollisionPoint = FindRayIntersectionPoint(laserStartPoint,
+														  laserEndPoint,
+														  "wall_collisions");
+		laserEndPoint = wallCollisionPoint ?? laserEndPoint;
 
-		// TODO: make this a shape collision test?
-		uint collisionMask = GameManager.BuildPhysicsLayerMask("wall_collisions");
-		var raycastEnd = GlobalPosition + new Vector2(1, 0).Rotated(GlobalRotation) * MaxLength;
-		var query = PhysicsRayQueryParameters2D.Create(
-			GlobalPosition,
-			raycastEnd,
-			collisionMask
-		);
-		query.CollideWithAreas = true;
+		// Collide with enemies and collect intersection points.
+		var enemyCollisionPoints = FindPiercingRayIntersectionPoints(
+			laserStartPoint,
+			laserEndPoint,
+			"enemy_hitboxes");
 
-		var raycastResult = GetWorld2D().DirectSpaceState.IntersectRay(query);
-
-		if (raycastResult.Count == 0)
+		foreach (Vector2 point in enemyCollisionPoints)
 		{
-			SetLength(MaxLength);
-			return;
+			var emitter = LaserHitParticlesScene.Instantiate<GpuParticles2D>();
+			emitter.OneShot = true;
+			emitter.Emitting = false;
+			emitter.ZIndex = 2;
+			AddChild(emitter);
+			emitter.GlobalPosition = point;
+			emitter.Emitting = true;
+		}
+
+		SetLength((laserEndPoint - laserStartPoint).Length() + 5);
+	}
+
+	// Find all intersection points of a ray that pierces through targets.
+	private List<Vector2> FindPiercingRayIntersectionPoints(
+		Vector2 startPosition,
+		Vector2 endPosition,
+		string collisionLayer
+	)
+	{
+		var collisionPoints = new List<Vector2>();
+		var collisionRids = new Godot.Collections.Array<Rid>();
+		for (; ; )
+		{
+			var result = PerformRayCast(startPosition,
+										endPosition,
+										collisionLayer,
+										collisionRids
+										);
+			if (result.Count() == 0) break;
+			collisionPoints.Add((Vector2)result["position"]);
+			collisionRids.Add((Rid)result["rid"]);
+		}
+		return collisionPoints;
+	}
+
+	private Vector2? FindRayIntersectionPoint(
+		Vector2 startPosition,
+		Vector2 endPosition,
+		string collisionLayer,
+		Godot.Collections.Array<Rid> exclusions = null)
+	{
+		var result = PerformRayCast(startPosition, endPosition, collisionLayer, exclusions);
+		if (result.Count() > 0)
+		{
+			return (Vector2)result["position"];
 		}
 		else
 		{
-			var collisionPositionProjection = ((Vector2)raycastResult["position"] - GlobalPosition)
-				.Project(raycastEnd - GlobalPosition);
-			SetLength(collisionPositionProjection.Length() + 5);
-			return;
+			return null;
 		}
+	}
+
+	private Godot.Collections.Dictionary PerformRayCast(
+		Vector2 startPosition,
+		Vector2 endPosition,
+		string collisionLayer,
+		Godot.Collections.Array<Rid> exclusions = null)
+	{
+		uint collisionMask = GameManager.BuildPhysicsLayerMask(collisionLayer);
+		var query = PhysicsRayQueryParameters2D.Create(
+			startPosition,
+			endPosition,
+			collisionMask
+		);
+		query.CollideWithAreas = true;
+		if (exclusions != null)
+		{
+			query.Exclude = exclusions;
+		}
+
+		return GetWorld2D().DirectSpaceState.IntersectRay(query);
 	}
 
 	private void SetLength(float length)
