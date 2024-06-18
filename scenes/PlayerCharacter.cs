@@ -175,7 +175,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	private void TriggerRangedAttack()
 	{
 
-		var bulletDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
+		var bulletDirection = (GetGlobalMousePosition() - RangedAttackSpawn.GlobalPosition).Normalized();
 		var spawnPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 
 		PlayerState.TriggerRangedAttack(bulletDirection, spawnPosition);
