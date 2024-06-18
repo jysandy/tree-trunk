@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dc1kqk1aq02la"]
 
-[ext_resource type="Texture2D" uid="uid://kkxjt0id6273" path="res://assets/pixel-effects/115_3.png" id="1_5rxt0"]
+[ext_resource type="Texture2D" uid="uid://bi12byrn0e50p" path="res://assets/pixel-effects/111_3.png" id="1_ruwu0"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k3tai"]
 particles_animation = true
@@ -13,6 +13,8 @@ particle_flag_disable_z = true
 emission_shape = 1
 emission_sphere_radius = 10.0
 spread = 180.0
+scale_min = 0.5
+scale_max = 0.5
 anim_speed_min = 2.0
 anim_speed_max = 2.0
 
@@ -20,5 +22,5 @@ anim_speed_max = 2.0
 material = SubResource("CanvasItemMaterial_k3tai")
 amount = 3
 process_material = SubResource("ParticleProcessMaterial_acdk1")
-texture = ExtResource("1_5rxt0")
+texture = ExtResource("1_ruwu0")
 explosiveness = 0.8
