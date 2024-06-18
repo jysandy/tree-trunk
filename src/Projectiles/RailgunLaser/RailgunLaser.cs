@@ -18,6 +18,9 @@ public partial class RailgunLaser : Node2D, IAttack
 	[Export]
 	public Color BeamColor { get; set; } = Colors.Red;
 
+	[Export]
+	public float BaseRadiusMultiplier {get; set; } = 1.5f;
+
 	public Color BeamParticlesColor { get { return BeamColor * 1.5f; } }
 
 	[Export]
@@ -40,6 +43,8 @@ public partial class RailgunLaser : Node2D, IAttack
 
 	private GameManager GameManager { get { return GetNode<GameManager>("/root/GameManager"); } }
 	private LaserBase LaserBase { get { return GetNode<LaserBase>("LaserBase"); } }
+
+	private GpuParticles2D BaseParticles { get { return GetNode<GpuParticles2D>("BaseParticles"); } }
 	private CollisionShape2D CollisionShape { get { return GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D"); } }
 
 	private PackedScene LaserHitParticlesScene { get; set; } = GD.Load<PackedScene>("res://src/Projectiles/RailgunLaser/LaserHitParticles.tscn");
@@ -48,11 +53,18 @@ public partial class RailgunLaser : Node2D, IAttack
 	{
 		base._Ready();
 		LaserBase.Color = BeamColor;
-		LaserBase.Radius = (BeamVisualWidth / 2.0f) * 2.5f;
+		LaserBase.Radius = (BeamVisualWidth / 2.0f) * BaseRadiusMultiplier;
 		LaserBase.AlphaMulMin = AlphaMulMin;
 		LaserBase.FlickerFrequency = FlickerFrequency;
 		LaserBase.FadeoutRate = FadeoutRate;
 		LaserBase.FadeoutFinished += OnLaserBaseFadeoutFinished;
+
+		BaseParticles.Emitting = false;
+		BaseParticles.OneShot = true;
+		var processMaterial = (ParticleProcessMaterial) BaseParticles.ProcessMaterial;
+		processMaterial.Color = BeamParticlesColor;
+		BaseParticles.Position = new Vector2(-LaserBase.Radius * 0.8f, 0);
+		BaseParticles.Emitting = true;
 	}
 
 	public override void _PhysicsProcess(double delta)

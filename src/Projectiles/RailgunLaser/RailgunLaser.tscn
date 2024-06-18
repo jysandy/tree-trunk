@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cmgtyn81rsrbv"]
+[gd_scene load_steps=10 format=3 uid="uid://cmgtyn81rsrbv"]
 
 [ext_resource type="Shader" path="res://src/Projectiles/RailgunLaser/RailgunLaser.gdshader" id="1_tqfmg"]
 [ext_resource type="Script" path="res://src/Projectiles/RailgunLaser/RailgunLaser.cs" id="1_wrtkl"]
@@ -22,11 +22,23 @@ shader_parameter/radius = null
 shader_parameter/alpha_mul_min = null
 shader_parameter/flicker_frequency = null
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_mal7w"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_17im0"]
+particle_flag_disable_z = true
+spread = 75.0
+initial_velocity_min = 60.0
+initial_velocity_max = 90.0
+gravity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
+scale_min = 1.5
+scale_max = 2.0
+
 [node name="RailgunLaser" type="Node2D"]
 z_index = 1
 material = SubResource("ShaderMaterial_vdml1")
 script = ExtResource("1_wrtkl")
 BeamColor = Color(0.8, 0, 0.192157, 1)
+BaseRadiusMultiplier = 1.7
 metadata/_edit_group_ = true
 
 [node name="LaserHurtbox" type="Area2D" parent="."]
@@ -42,3 +54,12 @@ disabled = true
 visible = false
 material = SubResource("ShaderMaterial_nvbft")
 script = ExtResource("3_e74vg")
+
+[node name="BaseParticles" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_mal7w")
+emitting = false
+amount = 4
+process_material = SubResource("ParticleProcessMaterial_17im0")
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.8
