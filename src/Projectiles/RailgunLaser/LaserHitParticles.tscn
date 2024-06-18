@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://dc1kqk1aq02la"]
+[gd_scene load_steps=5 format=3 uid="uid://dc1kqk1aq02la"]
 
+[ext_resource type="Shader" path="res://src/Projectiles/RailgunLaser/LaserHitParticles.gdshader" id="1_lc3af"]
 [ext_resource type="Texture2D" uid="uid://bi12byrn0e50p" path="res://assets/pixel-effects/111_3.png" id="1_ruwu0"]
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k3tai"]
-particles_animation = true
-particles_anim_h_frames = 6
-particles_anim_v_frames = 2
-particles_anim_loop = false
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_twiia"]
+shader = ExtResource("1_lc3af")
+shader_parameter/particles_anim_h_frames = 6
+shader_parameter/particles_anim_v_frames = 2
+shader_parameter/particles_anim_loop = null
+shader_parameter/color = null
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_acdk1"]
 particle_flag_disable_z = true
@@ -19,7 +21,7 @@ anim_speed_min = 2.0
 anim_speed_max = 2.0
 
 [node name="LaserHitParticles" type="GPUParticles2D"]
-material = SubResource("CanvasItemMaterial_k3tai")
+material = SubResource("ShaderMaterial_twiia")
 amount = 3
 process_material = SubResource("ParticleProcessMaterial_acdk1")
 texture = ExtResource("1_ruwu0")

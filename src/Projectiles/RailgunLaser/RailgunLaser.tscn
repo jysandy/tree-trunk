@@ -26,6 +26,7 @@ shader_parameter/flicker_frequency = null
 z_index = 1
 material = SubResource("ShaderMaterial_vdml1")
 script = ExtResource("1_wrtkl")
+BeamColor = Color(0.8, 0, 0.192157, 1)
 metadata/_edit_group_ = true
 
 [node name="LaserHurtbox" type="Area2D" parent="."]

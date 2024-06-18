@@ -13,5 +13,6 @@ void vertex() {
 void fragment() {
 	COLOR = beam_color;
 	COLOR.a = 1.0 - (abs(local_vertex.y) / (beam_width / 2.0));
+	COLOR.rgb *= 1.4;
 	COLOR.a *= ((1.0 - alpha_mul_min) / 2.0) * cos(flicker_frequency * TIME) + ((1.0 + alpha_mul_min) / 2.0);
 }

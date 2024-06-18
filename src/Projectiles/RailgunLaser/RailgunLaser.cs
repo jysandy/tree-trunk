@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Godot;
 using TreeTrunk;
 
@@ -15,7 +16,9 @@ public partial class RailgunLaser : Node2D, IAttack
 	public float HurtboxWidth { get; set; } = 5.0f;
 
 	[Export]
-	public Color BeamColor { get; set; } = Colors.Green;
+	public Color BeamColor { get; set; } = Colors.Red;
+
+	public Color BeamParticlesColor { get { return BeamColor * 1.5f; } }
 
 	[Export]
 	public float AlphaMulMin { get; set; } = 0.5f;
@@ -39,7 +42,7 @@ public partial class RailgunLaser : Node2D, IAttack
 	private LaserBase LaserBase { get { return GetNode<LaserBase>("LaserBase"); } }
 	private CollisionShape2D CollisionShape { get { return GetNode<CollisionShape2D>("LaserHurtbox/CollisionShape2D"); } }
 
-	private PackedScene LaserHitParticlesScene {get; set; } = GD.Load<PackedScene>("res://src/Projectiles/RailgunLaser/LaserHitParticles.tscn");
+	private PackedScene LaserHitParticlesScene { get; set; } = GD.Load<PackedScene>("res://src/Projectiles/RailgunLaser/LaserHitParticles.tscn");
 
 	public override void _Ready()
 	{
@@ -73,16 +76,23 @@ public partial class RailgunLaser : Node2D, IAttack
 
 		foreach (Vector2 point in enemyCollisionPoints)
 		{
-			var emitter = LaserHitParticlesScene.Instantiate<GpuParticles2D>();
-			emitter.OneShot = true;
-			emitter.Emitting = false;
-			emitter.ZIndex = 2;
-			AddChild(emitter);
-			emitter.GlobalPosition = point;
-			emitter.Emitting = true;
+			SpawnHitParticles(point);
 		}
 
 		SetLength((laserEndPoint - laserStartPoint).Length() + 5);
+	}
+
+	private void SpawnHitParticles(Vector2 spawnPoint)
+	{
+		var emitter = LaserHitParticlesScene.Instantiate<GpuParticles2D>();
+		emitter.OneShot = true;
+		emitter.Emitting = false;
+		emitter.ZIndex = 2;
+		var shader = (ShaderMaterial)emitter.Material;
+		shader.SetShaderParameter("color", BeamParticlesColor);
+		AddChild(emitter);
+		emitter.GlobalPosition = spawnPoint;
+		emitter.Emitting = true;
 	}
 
 	// Find all intersection points of a ray that pierces through targets.
