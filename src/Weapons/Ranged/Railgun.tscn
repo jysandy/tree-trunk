@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdq43g2d038d5"]
+
+[ext_resource type="Script" path="res://src/Weapons/Ranged/Railgun.cs" id="1_307a3"]
+[ext_resource type="AudioStream" uid="uid://b1bcgmdxa5a2s" path="res://assets/shapeforms-free-audio/electron-impeller-fire-07.wav" id="2_phgpr"]
+
+[node name="Railgun" type="Node"]
+script = ExtResource("1_307a3")
+
+[node name="FireSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_phgpr")

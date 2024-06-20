@@ -47,11 +47,18 @@ namespace TreeTrunk
             CurrentWeapon.TriggerRangedAttack(bulletDirection, spawnPosition);
         }
 
+        // Weapons have to be scenes in order to contain AudioStreamPlayers with WAVs.
+        private PackedScene _pistolScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Pistol.tscn");
+        private PackedScene _railgunScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Railgun.tscn");
+
         public override void _Ready()
         {
             base._Ready();
             _currentHealth = MaxHealth;
-            _weapons = new RangedWeapon[] { new Railgun(), new Pistol() };
+            _weapons = new RangedWeapon[] { 
+                _pistolScene.Instantiate<Pistol>(), 
+                _railgunScene.Instantiate<Railgun>()
+             };
             foreach (var weapon in _weapons)
             {
                 AddChild(weapon);

@@ -14,6 +14,9 @@ namespace TreeTrunk
 		[Export]
 		public override int MaxAmmo { get; set; } = 10;
 
+		private AudioStreamPlayer FireSound
+		{ get { return GetNode<AudioStreamPlayer>("FireSound"); } }
+
 		private Bullet BuildBullet(Vector2 bulletDirection, Vector2 globalSpawnPosition)
 		{
 			var velocity = bulletDirection * 600.0f;
@@ -30,6 +33,7 @@ namespace TreeTrunk
 		{
 			var gameManager = GetNode<GameManager>("/root/GameManager");
 			gameManager.AddToCurrentScene(BuildBullet(bulletDirection, globalSpawnPosition));
+			FireSound.Play();
 		}
 	}
 }
