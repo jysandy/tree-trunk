@@ -1,6 +1,6 @@
 [gd_scene load_steps=71 format=3 uid="uid://nlyux760ykgh"]
 
-[ext_resource type="Script" path="res://scenes/PlayerCharacter.cs" id="1_qnhp3"]
+[ext_resource type="Script" path="res://src/Characters/PlayerCharacter.cs" id="1_qnhp3"]
 [ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
 [ext_resource type="Texture2D" uid="uid://b66ajdxx7f3to" path="res://assets/world-and-dungeon/player/dead/death-01.png" id="2_qrti3"]
 [ext_resource type="Texture2D" uid="uid://c0qiq8tqewg8d" path="res://assets/world-and-dungeon/player/idle/idle-down-02.png" id="2_w7kge"]

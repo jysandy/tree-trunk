@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://byovaei4ckxmp"]
 
-[ext_resource type="Script" path="res://scenes/Critter.cs" id="1_ddtl1"]
+[ext_resource type="Script" path="res://src/Characters/Critter.cs" id="1_ddtl1"]
 [ext_resource type="Texture2D" uid="uid://4a552ol44vgr" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-01.png" id="1_xtinv"]
 [ext_resource type="Texture2D" uid="uid://dqvfahj7idyo7" path="res://assets/world-and-dungeon/enemies/Enemy1/dead-A-01.png" id="2_fhjxs"]
 [ext_resource type="Texture2D" uid="uid://djaf4xhuwk4mg" path="res://assets/world-and-dungeon/enemies/Enemy1/idle-A-02.png" id="2_xx7po"]

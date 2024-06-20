@@ -4,6 +4,48 @@ using TreeTrunk;
 
 public partial class PlayerCharacter : CharacterBody2D
 {
+	[Export]
+	public float Speed { get; set; } = 200.0f;
+
+	[Export]
+	public float MaxHealth { get; set; } = 10000.0f;
+
+	private float _currentHealth;
+	private RangedWeapon[] _weapons;
+	private int _equippedWeaponIndex = 0;
+
+	[Signal]
+	public delegate void CurrentAmmoChangedEventHandler(int newCurrentAmmoValue);
+
+	public RangedWeapon CurrentWeapon { get { return _weapons[_equippedWeaponIndex]; } }
+
+	public int CurrentAmmo { get { return CurrentWeapon.CurrentAmmo; } }
+
+	public bool IsDead
+	{
+		get { return _currentHealth <= 0; }
+	}
+
+	private void EmitCurrentAmmoChanged()
+	{
+		EmitSignal(SignalName.CurrentAmmoChanged, CurrentWeapon.CurrentAmmo);
+	}
+
+	public void CycleWeapon()
+	{
+		_equippedWeaponIndex = (_equippedWeaponIndex + 1) % _weapons.Length;
+		EmitCurrentAmmoChanged();
+	}
+
+	public void TakeDamage(float damage)
+	{
+		_currentHealth = Mathf.Clamp(_currentHealth - damage, 0, MaxHealth);
+	}
+
+	// Weapons have to be scenes in order to contain AudioStreamPlayers with WAVs.
+	private PackedScene _pistolScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Pistol.tscn");
+	private PackedScene _railgunScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Railgun.tscn");
+
 	public PackedScene MeleeAttack = GD.Load<PackedScene>("res://src/Weapons/Melee/MeleeAttack.tscn");
 
 	private bool _isMeleeAttacking = false;
@@ -11,7 +53,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	private void SetVelocityFromInput()
 	{
 		Vector2 inputDirection = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-		Velocity = inputDirection * PlayerState.Speed;
+		Velocity = inputDirection * Speed;
 	}
 
 	private AnimatedSprite2D PlayerSprite
@@ -30,13 +72,11 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	public GameManager GameManager { get { return GetNode<GameManager>("/root/GameManager"); } }
 
-	public PlayerState PlayerState { get { return GameManager.PlayerState; } }
-
 	private bool IsMoving
 	{
 		get
 		{
-			return !PlayerState.IsDead && Velocity.Length() > 0;
+			return !IsDead && Velocity.Length() > 0;
 		}
 	}
 
@@ -99,7 +139,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private void PlayMovementAnimation()
 	{
-		if (PlayerState.IsDead) return;
+		if (IsDead) return;
 
 		if (IsMoving)
 		{
@@ -153,7 +193,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private void TriggerMeleeAttack(CardinalDirection direction)
 	{
-		if (_isMeleeAttacking || PlayerState.IsDead)
+		if (_isMeleeAttacking || IsDead)
 		{
 			return;
 		}
@@ -178,7 +218,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		var bulletDirection = (GetGlobalMousePosition() - RangedAttackSpawn.GlobalPosition).Normalized();
 		var spawnPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
 
-		PlayerState.TriggerRangedAttack(bulletDirection, spawnPosition);
+		CurrentWeapon.TriggerRangedAttack(bulletDirection, spawnPosition);
 	}
 
 	public override void _Ready()
@@ -186,13 +226,26 @@ public partial class PlayerCharacter : CharacterBody2D
 		base._Ready();
 		GetNode<Area2D>("HealthHitbox").AreaEntered += OnHealthHitboxAreaEntered;
 		MeleeAttackSprite.AnimationFinished += OnMeleeAttackAnimationFinished;
+
+		_currentHealth = MaxHealth;
+		_weapons = new RangedWeapon[] {
+				_pistolScene.Instantiate<Pistol>(),
+				_railgunScene.Instantiate<Railgun>()
+			 };
+		foreach (var weapon in _weapons)
+		{
+			AddChild(weapon);
+			weapon.Connect(RangedWeapon.SignalName.CurrentAmmoChanged,
+				Callable.From<int>((_) => EmitCurrentAmmoChanged()));
+		}
+		EmitCurrentAmmoChanged();
 	}
 
 	public override void _Input(InputEvent @event)
 	{
 		base._Input(@event);
 
-		if (PlayerState.IsDead) return;
+		if (IsDead) return;
 
 		if (Input.IsActionJustPressed("melee_attack"))
 		{
@@ -200,13 +253,13 @@ public partial class PlayerCharacter : CharacterBody2D
 		}
 		else if (Input.IsActionJustPressed("cycle_weapon"))
 		{
-			PlayerState.CycleWeapon();
+			CycleWeapon();
 		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (PlayerState.IsDead) return;
+		if (IsDead) return;
 
 		SetVelocityFromInput();
 		PlayMovementAnimation();
@@ -221,9 +274,9 @@ public partial class PlayerCharacter : CharacterBody2D
 	private void OnHealthHitboxAreaEntered(Area2D area)
 	{
 		var attack = area.GetParent<IAttack>();
-		PlayerState.TakeDamage(attack.Damage);
+		TakeDamage(attack.Damage);
 
-		if (PlayerState.IsDead)
+		if (IsDead)
 		{
 			Die();
 		}
