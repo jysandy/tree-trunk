@@ -3,7 +3,7 @@ using System;
 
 namespace TreeTrunk
 {
-    public abstract partial class RangedWeapon : Node
+    public abstract partial class RangedWeapon : Node2D
     {
         abstract protected void SpawnGunfire(Vector2 bulletDirection, Vector2 globalSpawnPosition);
         abstract public int MaxAmmo { get; set; }

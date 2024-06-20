@@ -14,8 +14,8 @@ namespace TreeTrunk
 		[Export]
 		public override int MaxAmmo { get; set; } = 10;
 
-		private AudioStreamPlayer FireSound
-		{ get { return GetNode<AudioStreamPlayer>("FireSound"); } }
+		private AudioStreamPlayer2D FireSound
+		{ get { return GetNode<AudioStreamPlayer2D>("FireSound"); } }
 
 		private Bullet BuildBullet(Vector2 bulletDirection, Vector2 globalSpawnPosition)
 		{

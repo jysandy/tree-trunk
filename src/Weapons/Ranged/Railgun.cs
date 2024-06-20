@@ -11,8 +11,9 @@ namespace TreeTrunk
 
 		private PackedScene RailgunLaserScene = GD.Load<PackedScene>("res://src/Projectiles/RailgunLaser/RailgunLaser.tscn");
 
-		private AudioStreamPlayer FireSound
-		{ get { return GetNode<AudioStreamPlayer>("FireSound"); } }
+		private AudioStreamPlayer2D FireSound
+		{ get { return GetNode<AudioStreamPlayer2D>("FireSound"); } }
+		
 		private RailgunLaser BuildLaser(Vector2 bulletDirection, Vector2 globalSpawnPosition)
 		{
 			var laser = RailgunLaserScene.Instantiate<RailgunLaser>();

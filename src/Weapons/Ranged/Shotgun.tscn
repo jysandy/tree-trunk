@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://br64a3r4hb4ww"]
+
+[ext_resource type="Script" path="res://src/Weapons/Ranged/Shotgun.cs" id="1_urq4m"]
+[ext_resource type="AudioStream" uid="uid://de16bwdj8xxgh" path="res://assets/shapeforms-free-audio/auto-assault-rifle-a-fire-01.wav" id="2_3u1m0"]
+
+[node name="Shotgun" type="Node2D"]
+script = ExtResource("1_urq4m")
+
+[node name="FireSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_3u1m0")

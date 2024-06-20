@@ -45,6 +45,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	// Weapons have to be scenes in order to contain AudioStreamPlayers with WAVs.
 	private PackedScene _pistolScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Pistol.tscn");
 	private PackedScene _railgunScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Railgun.tscn");
+	private PackedScene _shotgunScene = GD.Load<PackedScene>("res://src/Weapons/Ranged/Shotgun.tscn");
 
 	public PackedScene MeleeAttack = GD.Load<PackedScene>("res://src/Weapons/Melee/MeleeAttack.tscn");
 
@@ -230,6 +231,7 @@ public partial class PlayerCharacter : CharacterBody2D
 		_currentHealth = MaxHealth;
 		_weapons = new RangedWeapon[] {
 				_pistolScene.Instantiate<Pistol>(),
+				_shotgunScene.Instantiate<Shotgun>(),
 				_railgunScene.Instantiate<Railgun>()
 			 };
 		foreach (var weapon in _weapons)
