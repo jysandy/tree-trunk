@@ -14,6 +14,12 @@ namespace TreeTrunk
 		[Export]
 		public override int MaxAmmo { get; set; } = 5;
 
+		public override Sprite2D Sprite
+		{ get { return GetNode<Sprite2D>("Sprite2D"); } }
+
+		public override Marker2D GunfireSpawn
+		{ get { return GetNode<Marker2D>("GunfireSpawn"); } }
+
 		private AudioStreamPlayer2D FireSound
 		{ get { return GetNode<AudioStreamPlayer2D>("FireSound"); } }
 

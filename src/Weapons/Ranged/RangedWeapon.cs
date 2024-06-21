@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 namespace TreeTrunk
 {
@@ -8,6 +9,11 @@ namespace TreeTrunk
         abstract protected void SpawnGunfire(Vector2 bulletDirection, Vector2 globalSpawnPosition);
         abstract public int MaxAmmo { get; set; }
         abstract public double FireRate { get; set; }
+
+        abstract public Sprite2D Sprite { get; }
+        abstract public Marker2D GunfireSpawn { get; }
+
+        private Vector2 _originalSpritePosition;
 
         // The time delay before reloading starts.
         public virtual float ReloadDelay { get; set; } = 1.5f;
@@ -43,6 +49,16 @@ namespace TreeTrunk
             }
         }
 
+        public virtual void Equip()
+        {
+            Visible = true;
+        }
+
+        public virtual void Unequip()
+        {
+            Visible = false;
+        }
+
         public override void _Ready()
         {
             base._Ready();
@@ -55,6 +71,36 @@ namespace TreeTrunk
             _reloadTimer.Timeout += OnReloadTimerTimeout;
 
             AddChild(_reloadTimer);
+
+            _originalSpritePosition = Sprite.Position;
+        }
+
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+            LookAtMouse();
+        }
+
+        private void LookAtMouse()
+        {
+            var toMouse = GetGlobalMousePosition() - GlobalPosition;
+            GlobalRotation = toMouse.Angle();
+            Sprite.FlipV = toMouse.X < 0;
+
+            if (toMouse.X < 0)
+            {
+                Sprite.FlipV = true;
+                // Mirror about the GunfireSpawn, not the weapon origin.
+                Sprite.Position = new Vector2(
+                    _originalSpritePosition.X,
+                    2 * GunfireSpawn.Position.Y - _originalSpritePosition.Y
+                );
+            }
+            else
+            {
+                Sprite.FlipV = false;
+                Sprite.Position = _originalSpritePosition;                
+            }
         }
 
         private void OnReloadTimerTimeout()
@@ -68,7 +114,7 @@ namespace TreeTrunk
             _reloadTimer.Start(ReloadInterval);
         }
 
-        public void TriggerRangedAttack(Vector2 bulletDirection, Vector2 globalSpawnPosition)
+        public void TriggerRangedAttack()
         {
             if (!_canShoot)
             {
@@ -84,7 +130,9 @@ namespace TreeTrunk
 
             this.RunLater(1 / FireRate, () => _canShoot = true);
 
-            SpawnGunfire(bulletDirection, globalSpawnPosition);
+            var spawnPosition = GunfireSpawn.GlobalPosition;
+            var bulletDirection = (GetGlobalMousePosition() - spawnPosition).Normalized();
+            SpawnGunfire(bulletDirection, spawnPosition);
         }
 
         [Signal]

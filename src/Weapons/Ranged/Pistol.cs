@@ -17,6 +17,12 @@ namespace TreeTrunk
 		private AudioStreamPlayer2D FireSound
 		{ get { return GetNode<AudioStreamPlayer2D>("FireSound"); } }
 
+		public override Sprite2D Sprite
+		{ get { return GetNode<Sprite2D>("Sprite2D"); } }
+
+		public override Marker2D GunfireSpawn
+		{ get { return GetNode<Marker2D>("GunfireSpawn"); } }
+
 		private Bullet BuildBullet(Vector2 bulletDirection, Vector2 globalSpawnPosition)
 		{
 			var velocity = bulletDirection * 600.0f;

@@ -33,7 +33,9 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	public void CycleWeapon()
 	{
+		CurrentWeapon.Unequip();
 		_equippedWeaponIndex = (_equippedWeaponIndex + 1) % _weapons.Length;
+		CurrentWeapon.Equip();
 		EmitCurrentAmmoChanged();
 	}
 
@@ -215,11 +217,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private void TriggerRangedAttack()
 	{
-
-		var bulletDirection = (GetGlobalMousePosition() - RangedAttackSpawn.GlobalPosition).Normalized();
-		var spawnPosition = RangedAttackSpawn.GlobalPosition + bulletDirection * 20;
-
-		CurrentWeapon.TriggerRangedAttack(bulletDirection, spawnPosition);
+		CurrentWeapon.TriggerRangedAttack();
 	}
 
 	public override void _Ready()
@@ -236,10 +234,13 @@ public partial class PlayerCharacter : CharacterBody2D
 			 };
 		foreach (var weapon in _weapons)
 		{
+			weapon.Unequip();
 			AddChild(weapon);
+			weapon.Position = RangedAttackSpawn.Position;
 			weapon.Connect(RangedWeapon.SignalName.CurrentAmmoChanged,
 				Callable.From<int>((_) => EmitCurrentAmmoChanged()));
 		}
+		CurrentWeapon.Equip();
 		EmitCurrentAmmoChanged();
 	}
 

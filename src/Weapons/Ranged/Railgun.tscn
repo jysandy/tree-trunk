@@ -1,10 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://bdq43g2d038d5"]
+[gd_scene load_steps=4 format=3 uid="uid://bdq43g2d038d5"]
 
 [ext_resource type="Script" path="res://src/Weapons/Ranged/Railgun.cs" id="1_307a3"]
 [ext_resource type="AudioStream" uid="uid://b1bcgmdxa5a2s" path="res://assets/shapeforms-free-audio/electron-impeller-fire-07.wav" id="2_phgpr"]
+[ext_resource type="Texture2D" uid="uid://cfey0hf0mk60b" path="res://assets/sci-fi-guns/3-1_4.png" id="3_wvgmv"]
 
 [node name="Railgun" type="Node2D"]
+z_index = 1
 script = ExtResource("1_307a3")
+metadata/_edit_group_ = true
 
 [node name="FireSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_phgpr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(12, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_wvgmv")
+flip_h = true
+
+[node name="GunfireSpawn" type="Marker2D" parent="."]
+show_behind_parent = true
+position = Vector2(45, 0)

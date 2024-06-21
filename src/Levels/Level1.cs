@@ -13,6 +13,11 @@ namespace TreeTrunk
 		public override void _Ready()
 		{
 			GD.Randomize();
+
+			// Make sure the level doesn't get moved around in the 
+			// editor accidentally.
+			GlobalPosition = Vector2.Zero;
+
 			// Make sure to not await during _Ready.
 			Callable.From(WaitForNavigationMap).CallDeferred();
 			GameManager.InitializeHUD();
