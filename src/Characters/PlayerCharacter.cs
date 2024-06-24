@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Godot;
 using TreeTrunk;
 
@@ -11,7 +13,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	public float MaxHealth { get; set; } = 10000.0f;
 
 	private float _currentHealth;
-	private RangedWeapon[] _weapons;
+	private List<RangedWeapon> _weapons;
 	private int _equippedWeaponIndex = 0;
 
 	[Signal]
@@ -34,7 +36,7 @@ public partial class PlayerCharacter : CharacterBody2D
 	public void CycleWeapon()
 	{
 		CurrentWeapon.Unequip();
-		_equippedWeaponIndex = (_equippedWeaponIndex + 1) % _weapons.Length;
+		_equippedWeaponIndex = (_equippedWeaponIndex + 1) % _weapons.Count;
 		CurrentWeapon.Equip();
 		EmitCurrentAmmoChanged();
 	}
@@ -70,6 +72,9 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	public Marker2D CentreOfMass
 	{ get { return GetNode<Marker2D>("CentreOfMass"); } }
+
+	private Area2D InteractionArea
+	{ get { return GetNode<Area2D>("InteractionArea"); } }
 
 	private Marker2D RangedAttackSpawn { get { return GetNode<Marker2D>("RangedAttackSpawn"); } }
 
@@ -227,21 +232,41 @@ public partial class PlayerCharacter : CharacterBody2D
 		MeleeAttackSprite.AnimationFinished += OnMeleeAttackAnimationFinished;
 
 		_currentHealth = MaxHealth;
-		_weapons = new RangedWeapon[] {
+		var startingWeapons = new RangedWeapon[] {
 				_pistolScene.Instantiate<Pistol>(),
 				_shotgunScene.Instantiate<Shotgun>(),
-				_railgunScene.Instantiate<Railgun>()
-			 };
-		foreach (var weapon in _weapons)
+		};
+		_weapons = new List<RangedWeapon>();
+		foreach (var weapon in startingWeapons)
 		{
-			weapon.Unequip();
-			AddChild(weapon);
-			weapon.Position = RangedAttackSpawn.Position;
-			weapon.Connect(RangedWeapon.SignalName.CurrentAmmoChanged,
-				Callable.From<int>((_) => EmitCurrentAmmoChanged()));
+			AddWeaponToInventory(weapon);
 		}
 		CurrentWeapon.Equip();
 		EmitCurrentAmmoChanged();
+	}
+
+	public void AddWeaponToInventory(RangedWeapon weapon)
+	{
+		_weapons.Add(weapon);
+		weapon.Unequip();
+		AddChild(weapon);
+		weapon.Position = RangedAttackSpawn.Position;
+		weapon.Connect(RangedWeapon.SignalName.CurrentAmmoChanged,
+				Callable.From<int>((_) => EmitCurrentAmmoChanged()));
+	}
+
+	private void EquipLastWeapon()
+	{
+		CurrentWeapon.Unequip();
+		_equippedWeaponIndex = _weapons.Count - 1;
+		CurrentWeapon.Equip();
+		EmitCurrentAmmoChanged();
+	}
+
+	public void AddAndEquipWeapon(RangedWeapon weapon)
+	{
+		AddWeaponToInventory(weapon);
+		EquipLastWeapon();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -258,6 +283,19 @@ public partial class PlayerCharacter : CharacterBody2D
 		{
 			CycleWeapon();
 		}
+		else if (Input.IsActionJustPressed("interact"))
+		{
+			PerformInteraction();
+		}
+	}
+
+	public void PerformInteraction()
+	{
+		if (!InteractionArea.HasOverlappingBodies()) return;
+
+		var bodies = InteractionArea.GetOverlappingBodies();
+		Node2D nearestBody = bodies.MinBy((Node2D body) => body.GlobalPosition.DistanceSquaredTo(GlobalPosition));
+		((IInteractible)nearestBody).Interact(this);
 	}
 
 	public override void _PhysicsProcess(double delta)

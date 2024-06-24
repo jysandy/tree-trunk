@@ -1,0 +1,65 @@
+[gd_scene load_steps=9 format=3 uid="uid://wwqjlgs3m7uj"]
+
+[ext_resource type="Script" path="res://src/Interactibles/Chest.cs" id="1_4og3r"]
+[ext_resource type="Texture2D" uid="uid://deuo4eumexrnk" path="res://assets/magic-pixels-world/chest_keys_treasure.png" id="1_he4jc"]
+[ext_resource type="AudioStream" uid="uid://pl0v1w8sikjo" path="res://assets/shapeforms-free-audio/OPEN_CASE_02.wav" id="3_ey5hn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o446y"]
+atlas = ExtResource("1_he4jc")
+region = Rect2(32, 51, 32, 51)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nhcu5"]
+atlas = ExtResource("1_he4jc")
+region = Rect2(0, 51, 32, 51)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d64p6"]
+atlas = ExtResource("1_he4jc")
+region = Rect2(0, 51, 32, 51)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jftok"]
+atlas = ExtResource("1_he4jc")
+region = Rect2(32, 51, 32, 51)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5oqst"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o446y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nhcu5")
+}],
+"loop": false,
+"name": &"close",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d64p6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jftok")
+}],
+"loop": false,
+"name": &"open",
+"speed": 5.0
+}]
+
+[node name="Chest" type="StaticBody2D"]
+z_index = 1
+y_sort_enabled = true
+collision_layer = 129
+collision_mask = 49
+script = ExtResource("1_4og3r")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -13)
+sprite_frames = SubResource("SpriteFrames_5oqst")
+animation = &"open"
+
+[node name="Hitbox" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-3, 6, -12, 1, -12, -9, 8, -19, 13, -14, 13, -2)
+
+[node name="OpenSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_ey5hn")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://nlyux760ykgh"]
+[gd_scene load_steps=72 format=3 uid="uid://nlyux760ykgh"]
 
 [ext_resource type="Script" path="res://src/Characters/PlayerCharacter.cs" id="1_qnhp3"]
 [ext_resource type="Texture2D" uid="uid://b3ta1cb03x0mb" path="res://assets/world-and-dungeon/player/idle/idle-down-01.png" id="1_xduoe"]
@@ -312,6 +312,9 @@ animations = [{
 "speed": 45.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ph7s0"]
+radius = 27.8568
+
 [node name="PlayerCharacter" type="CharacterBody2D"]
 z_index = 1
 y_sort_enabled = true
@@ -365,3 +368,11 @@ animation = &"attack-right"
 
 [node name="CentreOfMass" type="Marker2D" parent="."]
 position = Vector2(0, -17)
+
+[node name="InteractionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(0, -13)
+shape = SubResource("CircleShape2D_ph7s0")
