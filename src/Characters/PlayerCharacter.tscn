@@ -317,7 +317,6 @@ radius = 27.8568
 
 [node name="PlayerCharacter" type="CharacterBody2D"]
 z_index = 1
-y_sort_enabled = true
 collision_layer = 16
 collision_mask = 33
 motion_mode = 1
