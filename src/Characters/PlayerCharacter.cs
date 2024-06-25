@@ -115,7 +115,7 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	private CardinalDirection DirectionOfPlayer()
 	{
-		var playerToMouse = GetGlobalMousePosition() - Position;
+		var playerToMouse = GetGlobalMousePosition() - GlobalPosition;
 		return CardinalDirectionExtension.FromVector(playerToMouse);
 	}
 
